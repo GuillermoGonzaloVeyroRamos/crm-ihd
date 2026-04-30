@@ -3,590 +3,125 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM Seguros</title>
+<title>CRM Seguros — BH Asociados</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   :root {
-    --bg: #f5f4f0;
-    --surface: #ffffff;
-    --surface2: #f0efe9;
-    --border: #e0ddd5;
-    --border2: #ccc9be;
-    --text: #1a1916;
-    --text2: #6b6860;
-    --text3: #9e9b92;
-    --accent: #1a4a8a;
-    --accent-light: #e8eef7;
-    --accent-text: #1a4a8a;
-    --danger: #a32d2d;
-    --danger-light: #fcebeb;
-    --success: #3b6d11;
-    --success-light: #eaf3de;
-    --amber: #854f0b;
-    --amber-light: #faeeda;
-    --radius: 10px;
-    --radius-sm: 6px;
+    --bg: #f5f4f0; --surface: #ffffff; --surface2: #f0efe9;
+    --border: #e0ddd5; --border2: #ccc9be; --text: #1a1916;
+    --text2: #6b6860; --text3: #9e9b92; --accent: #1a4a8a;
+    --accent-light: #e8eef7; --accent-text: #1a4a8a;
+    --danger: #a32d2d; --danger-light: #fcebeb;
+    --success: #3b6d11; --success-light: #eaf3de;
+    --amber: #854f0b; --amber-light: #faeeda;
+    --radius: 10px; --radius-sm: 6px;
     --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
   }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.5; }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 14px;
-    line-height: 1.5;
-  }
+  #loading-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); flex-direction: column; gap: 12px; }
+  .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ─── LOGIN ─────────────────────────────────────────── */
-  #login-screen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #0d2d5e 0%, #1a4a8a 60%, #2563b0 100%);
-  }
-
-  .login-card {
-    background: var(--surface);
-    border-radius: 16px;
-    padding: 2.5rem 2rem;
-    width: 360px;
-    box-shadow: var(--shadow-md);
-  }
-
-  .login-logo {
-    text-align: center;
-    margin-bottom: 1.75rem;
-  }
-
-  .login-logo .shield {
-    width: 48px;
-    height: 56px;
-    background: var(--accent);
-    border-radius: 8px 8px 24px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 0.75rem;
-    color: #fff;
-    font-size: 22px;
-  }
-
-  .login-logo h1 {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.3px;
-  }
-
-  .login-logo p {
-    font-size: 13px;
-    color: var(--text2);
-    margin-top: 2px;
-  }
-
-  .form-group {
-    margin-bottom: 1rem;
-  }
-
-  .form-group label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text2);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .form-group input, .form-group select, .form-group textarea {
-    width: 100%;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 9px 12px;
-    font-family: inherit;
-    font-size: 14px;
-    color: var(--text);
-    background: var(--surface);
-    transition: border-color 0.15s, box-shadow 0.15s;
-    outline: none;
-  }
-
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(26,74,138,0.12);
-  }
-
-  .form-group textarea {
-    resize: vertical;
-    min-height: 72px;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 16px;
-    border-radius: var(--radius-sm);
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-    width: 100%;
-    justify-content: center;
-    padding: 11px 16px;
-    font-size: 14px;
-  }
-
+  #login-screen { min-height: 100vh; display: none; align-items: center; justify-content: center; background: linear-gradient(135deg, #0d2d5e 0%, #1a4a8a 60%, #2563b0 100%); }
+  .login-card { background: var(--surface); border-radius: 16px; padding: 2.5rem 2rem; width: 360px; box-shadow: var(--shadow-md); }
+  .login-logo { text-align: center; margin-bottom: 1.75rem; }
+  .login-logo .shield { width: 48px; height: 56px; background: var(--accent); border-radius: 8px 8px 24px 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; color: #fff; font-size: 22px; }
+  .login-logo h1 { font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+  .login-logo p { font-size: 13px; color: var(--text2); margin-top: 2px; }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 12px; font-family: inherit; font-size: 14px; color: var(--text); background: var(--surface); transition: border-color 0.15s, box-shadow 0.15s; outline: none; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,74,138,0.12); }
+  .form-group textarea { resize: vertical; min-height: 72px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--radius-sm); font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; white-space: nowrap; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); width: 100%; justify-content: center; padding: 11px 16px; font-size: 14px; }
   .btn-primary:hover { background: #153d72; }
-
-  .btn-outline {
-    background: transparent;
-    color: var(--text);
-    border-color: var(--border2);
-  }
-
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-outline { background: transparent; color: var(--text); border-color: var(--border2); }
   .btn-outline:hover { background: var(--surface2); }
-
-  .btn-danger {
-    background: var(--danger-light);
-    color: var(--danger);
-    border-color: transparent;
-  }
-
+  .btn-danger { background: var(--danger-light); color: var(--danger); border-color: transparent; }
   .btn-danger:hover { background: #f7c1c1; }
-
-  .btn-success {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-  }
-
+  .btn-success { background: var(--accent); color: #fff; border-color: var(--accent); }
   .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .login-error { background: var(--danger-light); color: var(--danger); border: 1px solid #f09595; border-radius: var(--radius-sm); padding: 9px 12px; font-size: 13px; margin-bottom: 1rem; display: none; }
 
-  .login-error {
-    background: var(--danger-light);
-    color: var(--danger);
-    border: 1px solid #f09595;
-    border-radius: var(--radius-sm);
-    padding: 9px 12px;
-    font-size: 13px;
-    margin-bottom: 1rem;
-    display: none;
-  }
-
-  /* ─── APP ─────────────────────────────────────────── */
   #app { display: none; min-height: 100vh; }
-
-  .topbar {
-    background: #0d2d5e;
-    color: #fff;
-    padding: 0 1.5rem;
-    height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-  }
-
-  .topbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: -0.2px;
-  }
-
-  .topbar-brand .dot {
-    width: 8px;
-    height: 8px;
-    background: #4ade80;
-    border-radius: 50%;
-  }
-
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 13px;
-    color: rgba(255,255,255,0.75);
-  }
-
-  .topbar-right .user-badge {
-    background: rgba(255,255,255,0.15);
-    border-radius: 99px;
-    padding: 4px 12px;
-    font-size: 12px;
-    color: #fff;
-    font-weight: 500;
-  }
-
-  .topbar-right button {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: #fff;
-    border-radius: var(--radius-sm);
-    padding: 5px 12px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 500;
-    transition: background 0.15s;
-  }
-
+  .topbar { background: #0d2d5e; color: #fff; padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+  .topbar-brand { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
+  .topbar-brand .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .topbar-right .user-badge { background: rgba(255,255,255,0.15); border-radius: 99px; padding: 4px 12px; font-size: 12px; color: #fff; font-weight: 500; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .topbar-right button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: var(--radius-sm); padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 500; transition: background 0.15s; }
   .topbar-right button:hover { background: rgba(255,255,255,0.2); }
+  .main-content { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
 
-  .main-content {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 1.5rem 1.5rem;
-  }
-
-  /* ─── STATS ─────────────────────────────────────────── */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 1.5rem;
-  }
-
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1rem 1.25rem;
-    box-shadow: var(--shadow);
-  }
-
-  .stat-card .label {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    margin-bottom: 4px;
-  }
-
-  .stat-card .value {
-    font-size: 26px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.5px;
-    line-height: 1.1;
-  }
-
-  .stat-card .sub {
-    font-size: 12px;
-    color: var(--text3);
-    margin-top: 2px;
-  }
-
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; box-shadow: var(--shadow); }
+  .stat-card .label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
+  .stat-card .value { font-size: 26px; font-weight: 600; color: var(--text); letter-spacing: -0.5px; line-height: 1.1; }
+  .stat-card .sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
   .stat-card.accent { border-left: 3px solid var(--accent); }
   .stat-card.success { border-left: 3px solid var(--success); }
   .stat-card.amber { border-left: 3px solid var(--amber); }
   .stat-card.danger { border-left: 3px solid var(--danger); }
 
-  /* ─── TOOLBAR ─────────────────────────────────────────── */
-  .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
+  .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .toolbar h2 { font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; flex: 1; }
+  .search-box { position: relative; flex: 1; max-width: 300px; }
+  .search-box input { width: 100%; padding: 8px 12px 8px 34px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--surface); color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+  .search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,74,138,0.1); }
+  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; pointer-events: none; }
+  .filter-select { padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--surface); color: var(--text); outline: none; cursor: pointer; }
+  .filter-select:focus { border-color: var(--accent); }
 
-  .toolbar h2 {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.2px;
-    flex: 1;
-  }
-
-  .search-box {
-    position: relative;
-    flex: 1;
-    max-width: 300px;
-  }
-
-  .search-box input {
-    width: 100%;
-    padding: 8px 12px 8px 34px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: inherit;
-    background: var(--surface);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-
-  .search-box input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(26,74,138,0.1);
-  }
-
-  .search-icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text3);
-    font-size: 14px;
-    pointer-events: none;
-  }
-
-  /* ─── TABLE ─────────────────────────────────────────── */
-  .table-wrap {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-  }
-
-  .table-wrap table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  thead {
-    background: var(--surface2);
-  }
-
-  thead th {
-    padding: 10px 14px;
-    text-align: left;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text2);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.1s;
-  }
-
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+  .table-wrap table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead { background: var(--surface2); }
+  thead th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
   tbody tr:last-child { border-bottom: none; }
   tbody tr:hover { background: #f8f7f4; }
-
-  tbody td {
-    padding: 11px 14px;
-    color: var(--text);
-    vertical-align: middle;
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 99px;
-    font-size: 11px;
-    font-weight: 500;
-  }
-
+  tbody td { padding: 11px 14px; color: var(--text); vertical-align: middle; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 500; }
   .badge-blue { background: var(--accent-light); color: var(--accent-text); }
   .badge-green { background: var(--success-light); color: var(--success); }
   .badge-amber { background: var(--amber-light); color: var(--amber); }
   .badge-red { background: var(--danger-light); color: var(--danger); }
-
   .actions-cell { display: flex; gap: 6px; }
-
-  .empty-state {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: var(--text3);
-  }
-
+  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text3); }
   .empty-state .icon { font-size: 40px; margin-bottom: 0.75rem; }
-  .empty-state p { font-size: 14px; }
 
-  /* ─── MODAL ─────────────────────────────────────────── */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(10,20,40,0.45);
-    z-index: 200;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 2rem 1rem;
-    overflow-y: auto;
-    display: none;
-  }
-
-  .modal-backdrop.open { display: flex; }
-
-  .modal {
-    background: var(--surface);
-    border-radius: 14px;
-    width: 100%;
-    max-width: 680px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    overflow: hidden;
-    margin: auto;
-  }
-
-  .modal-header {
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--surface2);
-  }
-
-  .modal-header h3 {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .modal-close {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: var(--text3);
-    line-height: 1;
-    padding: 2px 6px;
-    border-radius: 4px;
-    transition: background 0.15s, color 0.15s;
-  }
-
-  .modal-close:hover { background: var(--border); color: var(--text); }
-
-  .modal-body {
-    padding: 1.5rem;
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  .form-grid .full { grid-column: 1 / -1; }
-
-  .modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    background: var(--surface2);
-  }
-
-  /* ─── DETAIL VIEW ─────────────────────────────────────── */
-  .detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .detail-item label {
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    display: block;
-    margin-bottom: 3px;
-  }
-
-  .detail-item .val {
-    font-size: 14px;
-    color: var(--text);
-    font-weight: 400;
-  }
-
-  .detail-item.full { grid-column: 1 / -1; }
-
-  /* ─── TOAST ─────────────────────────────────────────── */
-  #toast {
-    position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    padding: 10px 18px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-weight: 500;
-    z-index: 999;
-    box-shadow: var(--shadow-md);
-    transform: translateY(10px);
-    opacity: 0;
-    transition: all 0.25s;
-    pointer-events: none;
-  }
-
-  #toast.show { opacity: 1; transform: translateY(0); }
-  #toast.success { background: var(--success-light); color: var(--success); border: 1px solid #c0dd97; }
-  #toast.error { background: var(--danger-light); color: var(--danger); border: 1px solid #f09595; }
-
-  .filter-select {
-    padding: 8px 10px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    font-family: inherit;
-    background: var(--surface);
-    color: var(--text);
-    outline: none;
-    cursor: pointer;
-  }
-
-  .filter-select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,74,138,0.1); }
-
-  .pagination {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 1rem;
-    border-top: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--text3);
-    background: var(--surface2);
-  }
-
+  .pagination { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-top: 1px solid var(--border); font-size: 12px; color: var(--text3); background: var(--surface2); }
   .pagination-btns { display: flex; gap: 4px; }
-
-  .pagination-btns button {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 4px 10px;
-    font-size: 12px;
-    cursor: pointer;
-    font-family: inherit;
-    color: var(--text);
-    transition: all 0.15s;
-  }
-
+  .pagination-btns button { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; color: var(--text); transition: all 0.15s; }
   .pagination-btns button:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
   .pagination-btns button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   .pagination-btns button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(10,20,40,0.45); z-index: 200; display: none; align-items: flex-start; justify-content: center; padding: 2rem 1rem; overflow-y: auto; }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 14px; width: 100%; max-width: 680px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden; margin: auto; }
+  .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface2); }
+  .modal-header h3 { font-size: 15px; font-weight: 600; color: var(--text); }
+  .modal-close { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text3); padding: 2px 6px; border-radius: 4px; transition: background 0.15s; }
+  .modal-close:hover { background: var(--border); color: var(--text); }
+  .modal-body { padding: 1.5rem; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; background: var(--surface2); }
+
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .detail-item label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 3px; }
+  .detail-item .val { font-size: 14px; color: var(--text); }
+  .detail-item.full { grid-column: 1 / -1; }
+
+  #toast { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; z-index: 999; box-shadow: var(--shadow-md); transform: translateY(10px); opacity: 0; transition: all 0.25s; pointer-events: none; }
+  #toast.show { opacity: 1; transform: translateY(0); }
+  #toast.success { background: var(--success-light); color: var(--success); border: 1px solid #c0dd97; }
+  #toast.error { background: var(--danger-light); color: var(--danger); border: 1px solid #f09595; }
 
   @media (max-width: 768px) {
     .stats-row { grid-template-columns: repeat(2, 1fr); }
@@ -601,33 +136,36 @@
 </head>
 <body>
 
-<!-- LOGIN -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <span style="font-size:13px;color:#6b6860">Cargando...</span>
+</div>
+
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
       <div class="shield">🛡</div>
-      <h1>CRM Seguros</h1>
-      <p>Gestión de pólizas y clientes</p>
+      <h1>BH Asociados</h1>
+      <p>CRM de pólizas y clientes</p>
     </div>
-    <div class="login-error" id="login-error">Usuario o contraseña incorrectos.</div>
+    <div class="login-error" id="login-error"></div>
     <div class="form-group">
-      <label>Usuario</label>
-      <input type="text" id="login-user" placeholder="usuario" autocomplete="username">
+      <label>Correo electrónico</label>
+      <input type="email" id="login-email" placeholder="correo@ejemplo.com" autocomplete="email">
     </div>
     <div class="form-group">
       <label>Contraseña</label>
       <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
     </div>
-    <button class="btn btn-primary" onclick="doLogin()">Iniciar sesión</button>
+    <button class="btn btn-primary" id="login-btn" onclick="doLogin()">Iniciar sesión</button>
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <div class="topbar">
     <div class="topbar-brand">
       <span>🛡</span>
-      <span>CRM Seguros</span>
+      <span>BH Asociados CRM</span>
       <span class="dot"></span>
     </div>
     <div class="topbar-right">
@@ -635,33 +173,13 @@
       <button onclick="doLogout()">Cerrar sesión</button>
     </div>
   </div>
-
   <div class="main-content">
-    <!-- STATS -->
     <div class="stats-row">
-      <div class="stat-card accent">
-        <div class="label">Total pólizas</div>
-        <div class="value" id="stat-total">0</div>
-        <div class="sub">registros activos</div>
-      </div>
-      <div class="stat-card success">
-        <div class="label">Clientes únicos</div>
-        <div class="value" id="stat-clients">0</div>
-        <div class="sub">en base de datos</div>
-      </div>
-      <div class="stat-card amber">
-        <div class="label">Ramos distintos</div>
-        <div class="value" id="stat-ramos">0</div>
-        <div class="sub">tipos de seguro</div>
-      </div>
-      <div class="stat-card danger">
-        <div class="label">Sin correo</div>
-        <div class="value" id="stat-noemail">0</div>
-        <div class="sub">datos incompletos</div>
-      </div>
+      <div class="stat-card accent"><div class="label">Total pólizas</div><div class="value" id="stat-total">—</div><div class="sub">registros activos</div></div>
+      <div class="stat-card success"><div class="label">Clientes únicos</div><div class="value" id="stat-clients">—</div><div class="sub">en base de datos</div></div>
+      <div class="stat-card amber"><div class="label">Ramos distintos</div><div class="value" id="stat-ramos">—</div><div class="sub">tipos de seguro</div></div>
+      <div class="stat-card danger"><div class="label">Sin correo</div><div class="value" id="stat-noemail">—</div><div class="sub">datos incompletos</div></div>
     </div>
-
-    <!-- TOOLBAR -->
     <div class="toolbar">
       <h2>Pólizas y clientes</h2>
       <div class="search-box">
@@ -673,20 +191,12 @@
       </select>
       <button class="btn btn-success" onclick="openModal()">+ Nueva póliza</button>
     </div>
-
-    <!-- TABLE -->
     <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th>Ramo</th>
-            <th>No. Póliza</th>
-            <th>Cliente</th>
-            <th>RFC</th>
-            <th>Aniversario</th>
-            <th>F. Pago</th>
-            <th>Agente</th>
-            <th>Acciones</th>
+            <th>Ramo</th><th>No. Póliza</th><th>Cliente</th><th>RFC</th>
+            <th>Aniversario</th><th>F. Pago</th><th>Agente</th><th>Acciones</th>
           </tr>
         </thead>
         <tbody id="table-body"></tbody>
@@ -695,7 +205,7 @@
         <div class="icon">📋</div>
         <p>No hay registros. Agrega una nueva póliza.</p>
       </div>
-      <div class="pagination" id="pagination-bar">
+      <div class="pagination">
         <span id="pagination-info">0 registros</span>
         <div class="pagination-btns" id="pagination-btns"></div>
       </div>
@@ -703,7 +213,6 @@
   </div>
 </div>
 
-<!-- MODAL FORM -->
 <div class="modal-backdrop" id="modal-form">
   <div class="modal">
     <div class="modal-header">
@@ -711,85 +220,44 @@
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
-      <input type="hidden" id="field-id">
       <div class="form-grid">
         <div class="form-group">
           <label>Ramo *</label>
           <select id="field-ramo">
             <option value="">Seleccionar...</option>
-            <option>Autos</option>
-            <option>Vida</option>
-            <option>Gastos Médicos Mayores</option>
-            <option>Gastos Médicos Menores</option>
-            <option>Hogar</option>
-            <option>Empresarial</option>
-            <option>Responsabilidad Civil</option>
-            <option>Transporte</option>
-            <option>Accidentes Personales</option>
-            <option>Otro</option>
+            <option>Autos</option><option>Vida</option>
+            <option>Gastos Médicos Mayores</option><option>Gastos Médicos Menores</option>
+            <option>Hogar</option><option>Empresarial</option>
+            <option>Responsabilidad Civil</option><option>Transporte</option>
+            <option>Accidentes Personales</option><option>Otro</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>No. de Póliza *</label>
-          <input type="text" id="field-poliza" placeholder="Ej. 12345-A">
-        </div>
-        <div class="form-group">
-          <label>Aniversario / Renovación</label>
-          <input type="date" id="field-aniversario">
-        </div>
-        <div class="form-group">
-          <label>Cliente *</label>
-          <input type="text" id="field-cliente" placeholder="Nombre completo">
-        </div>
-        <div class="form-group">
-          <label>RFC</label>
-          <input type="text" id="field-rfc" placeholder="Ej. XAXX010101000" style="font-family: 'DM Mono', monospace; letter-spacing: 0.5px;">
-        </div>
-        <div class="form-group">
-          <label>Fecha de nacimiento</label>
-          <input type="date" id="field-nacimiento">
-        </div>
-        <div class="form-group">
-          <label>Contacto (teléfono)</label>
-          <input type="tel" id="field-contacto" placeholder="10 dígitos">
-        </div>
-        <div class="form-group">
-          <label>Correo electrónico</label>
-          <input type="email" id="field-email" placeholder="correo@ejemplo.com">
-        </div>
+        <div class="form-group"><label>No. de Póliza *</label><input type="text" id="field-poliza" placeholder="Ej. 12345-A"></div>
+        <div class="form-group"><label>Aniversario / Renovación</label><input type="date" id="field-aniversario"></div>
+        <div class="form-group"><label>Cliente *</label><input type="text" id="field-cliente" placeholder="Nombre completo"></div>
+        <div class="form-group"><label>RFC</label><input type="text" id="field-rfc" placeholder="Ej. XAXX010101000" style="font-family:'DM Mono',monospace"></div>
+        <div class="form-group"><label>Fecha de nacimiento</label><input type="date" id="field-nacimiento"></div>
+        <div class="form-group"><label>Contacto (teléfono)</label><input type="tel" id="field-contacto" placeholder="10 dígitos"></div>
+        <div class="form-group"><label>Correo electrónico</label><input type="email" id="field-email" placeholder="correo@ejemplo.com"></div>
         <div class="form-group">
           <label>Forma de pago</label>
           <select id="field-pago">
             <option value="">Seleccionar...</option>
-            <option>Anual</option>
-            <option>Semestral</option>
-            <option>Trimestral</option>
-            <option>Mensual</option>
-            <option>Otro</option>
+            <option>Anual</option><option>Semestral</option><option>Trimestral</option><option>Mensual</option><option>Otro</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Propietario del contacto</label>
-          <input type="text" id="field-propietario" placeholder="Nombre">
-        </div>
-        <div class="form-group">
-          <label>Agente registrado</label>
-          <input type="text" id="field-agente" placeholder="Nombre del agente">
-        </div>
-        <div class="form-group full">
-          <label>Notas</label>
-          <textarea id="field-notas" placeholder="Observaciones, detalles adicionales..."></textarea>
-        </div>
+        <div class="form-group"><label>Propietario del contacto</label><input type="text" id="field-propietario" placeholder="Nombre"></div>
+        <div class="form-group"><label>Agente registrado</label><input type="text" id="field-agente" placeholder="Nombre del agente"></div>
+        <div class="form-group full"><label>Notas</label><textarea id="field-notas" placeholder="Observaciones..."></textarea></div>
       </div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-success" onclick="saveRecord()">Guardar</button>
+      <button class="btn btn-success" id="save-btn" onclick="saveRecord()">Guardar</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL DETAIL -->
 <div class="modal-backdrop" id="modal-detail">
   <div class="modal">
     <div class="modal-header">
@@ -804,213 +272,187 @@
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast"></div>
 
-<script>
-// ─── AUTH ────────────────────────────────────────────────
-const USERS = [
-  { user: 'admin', pass: 'admin123', name: 'Administrador' },
-  { user: 'agente1', pass: 'seguro2024', name: 'Agente 1' }
-];
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-let currentUser = null;
+const firebaseConfig = {
+  apiKey: "AIzaSyACURGWHDG5eifmI5aTnmNZVz-9oxPWleA",
+  authDomain: "crm-bh-asociados.firebaseapp.com",
+  projectId: "crm-bh-asociados",
+  storageBucket: "crm-bh-asociados.firebasestorage.app",
+  messagingSenderId: "549730257268",
+  appId: "1:549730257268:web:1eda0911ed272adf5d0421"
+};
 
-function doLogin() {
-  const u = document.getElementById('login-user').value.trim();
-  const p = document.getElementById('login-pass').value;
-  const found = USERS.find(x => x.user === u && x.pass === p);
-  const err = document.getElementById('login-error');
-  if (found) {
-    err.style.display = 'none';
-    currentUser = found;
-    document.getElementById('topbar-user').textContent = found.name;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    renderTable();
-    updateStats();
-    populateRamoFilter();
-  } else {
-    err.style.display = 'block';
-  }
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-document.getElementById('login-pass').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
-});
-
-function doLogout() {
-  currentUser = null;
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('login-user').value = '';
-  document.getElementById('login-pass').value = '';
-}
-
-// ─── DATA ────────────────────────────────────────────────
-function getData() {
-  return JSON.parse(localStorage.getItem('crm_records') || '[]');
-}
-
-function setData(d) {
-  localStorage.setItem('crm_records', JSON.stringify(d));
-}
-
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-}
-
-// ─── MODAL FORM ──────────────────────────────────────────
+let allRecords = [];
+let unsubscribe = null;
 let editingId = null;
-
-function openModal(id = null) {
-  editingId = id;
-  document.getElementById('modal-title').textContent = id ? 'Editar póliza' : 'Nueva póliza';
-  const fields = ['id','ramo','poliza','aniversario','cliente','rfc','nacimiento','contacto','email','pago','propietario','agente','notas'];
-  fields.forEach(f => { document.getElementById('field-' + f).value = ''; });
-
-  if (id) {
-    const rec = getData().find(r => r.id === id);
-    if (rec) {
-      fields.forEach(f => {
-        const el = document.getElementById('field-' + f);
-        if (el && rec[f] !== undefined) el.value = rec[f];
-      });
-    }
-  }
-  document.getElementById('modal-form').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modal-form').classList.remove('open');
-  editingId = null;
-}
-
-function saveRecord() {
-  const get = id => document.getElementById('field-' + id).value.trim();
-  const ramo = get('ramo'), poliza = get('poliza'), cliente = get('cliente');
-  if (!ramo || !poliza || !cliente) {
-    showToast('Ramo, Póliza y Cliente son obligatorios.', 'error');
-    return;
-  }
-  const rec = {
-    id: editingId || uid(),
-    ramo, poliza,
-    aniversario: get('aniversario'),
-    cliente, rfc: get('rfc'),
-    nacimiento: get('nacimiento'),
-    contacto: get('contacto'),
-    email: get('email'),
-    pago: get('pago'),
-    propietario: get('propietario'),
-    agente: get('agente'),
-    notas: get('notas'),
-    createdAt: editingId ? (getData().find(r=>r.id===editingId)||{}).createdAt : new Date().toISOString()
-  };
-  const data = getData();
-  if (editingId) {
-    const idx = data.findIndex(r => r.id === editingId);
-    if (idx > -1) data[idx] = rec;
-  } else {
-    data.unshift(rec);
-  }
-  setData(data);
-  closeModal();
-  renderTable();
-  updateStats();
-  populateRamoFilter();
-  showToast(editingId ? 'Registro actualizado.' : 'Póliza guardada correctamente.', 'success');
-}
-
-// ─── DELETE ──────────────────────────────────────────────
-function deleteRecord(id) {
-  if (!confirm('¿Eliminar este registro? Esta acción no se puede deshacer.')) return;
-  const data = getData().filter(r => r.id !== id);
-  setData(data);
-  renderTable();
-  updateStats();
-  populateRamoFilter();
-  showToast('Registro eliminado.', 'success');
-}
-
-// ─── DETAIL ──────────────────────────────────────────────
-function openDetail(id) {
-  const rec = getData().find(r => r.id === id);
-  if (!rec) return;
-  document.getElementById('detail-title').textContent = `${rec.ramo} — ${rec.poliza}`;
-  const fmt = v => v || '<span style="color:var(--text3)">—</span>';
-  const fmtDate = v => v ? new Date(v + 'T00:00:00').toLocaleDateString('es-MX', {day:'2-digit',month:'long',year:'numeric'}) : '<span style="color:var(--text3)">—</span>';
-  document.getElementById('detail-body').innerHTML = `
-    <div class="detail-grid">
-      <div class="detail-item"><label>Ramo</label><div class="val">${fmt(rec.ramo)}</div></div>
-      <div class="detail-item"><label>No. Póliza</label><div class="val" style="font-family:monospace">${fmt(rec.poliza)}</div></div>
-      <div class="detail-item"><label>Cliente</label><div class="val">${fmt(rec.cliente)}</div></div>
-      <div class="detail-item"><label>RFC</label><div class="val" style="font-family:monospace">${fmt(rec.rfc)}</div></div>
-      <div class="detail-item"><label>Fecha de nacimiento</label><div class="val">${fmtDate(rec.nacimiento)}</div></div>
-      <div class="detail-item"><label>Aniversario / Renovación</label><div class="val">${fmtDate(rec.aniversario)}</div></div>
-      <div class="detail-item"><label>Contacto</label><div class="val">${fmt(rec.contacto)}</div></div>
-      <div class="detail-item"><label>Correo electrónico</label><div class="val">${rec.email ? `<a href="mailto:${rec.email}" style="color:var(--accent-text)">${rec.email}</a>` : '<span style="color:var(--text3)">—</span>'}</div></div>
-      <div class="detail-item"><label>Forma de pago</label><div class="val">${fmt(rec.pago)}</div></div>
-      <div class="detail-item"><label>Propietario del contacto</label><div class="val">${fmt(rec.propietario)}</div></div>
-      <div class="detail-item full"><label>Agente registrado</label><div class="val">${fmt(rec.agente)}</div></div>
-      ${rec.notas ? `<div class="detail-item full"><label>Notas</label><div class="val" style="white-space:pre-wrap;line-height:1.6">${rec.notas}</div></div>` : ''}
-    </div>`;
-  document.getElementById('detail-edit-btn').onclick = () => { closeDetail(); openModal(id); };
-  document.getElementById('modal-detail').classList.add('open');
-}
-
-function closeDetail() {
-  document.getElementById('modal-detail').classList.remove('open');
-}
-
-// ─── TABLE ───────────────────────────────────────────────
 let currentPage = 1;
 const PER_PAGE = 12;
 
 const RAMO_BADGES = {
-  'Autos': 'badge-blue', 'Vida': 'badge-green',
-  'Gastos Médicos Mayores': 'badge-red', 'Gastos Médicos Menores': 'badge-amber',
-  'Hogar': 'badge-green', 'Empresarial': 'badge-blue',
-  'Responsabilidad Civil': 'badge-amber', 'Transporte': 'badge-blue',
-  'Accidentes Personales': 'badge-red', 'Otro': 'badge-amber'
+  'Autos':'badge-blue','Vida':'badge-green','Gastos Médicos Mayores':'badge-red',
+  'Gastos Médicos Menores':'badge-amber','Hogar':'badge-green','Empresarial':'badge-blue',
+  'Responsabilidad Civil':'badge-amber','Transporte':'badge-blue',
+  'Accidentes Personales':'badge-red','Otro':'badge-amber'
 };
 
+// AUTH STATE
+onAuthStateChanged(auth, user => {
+  document.getElementById('loading-screen').style.display = 'none';
+  if (user) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('topbar-user').textContent = user.email;
+    startListening();
+  } else {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
+    allRecords = [];
+  }
+});
+
+window.doLogin = async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Verificando...';
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch {
+    err.textContent = 'Correo o contraseña incorrectos.';
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Iniciar sesión';
+  }
+};
+
+window.doLogout = () => signOut(auth);
+
+document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') window.doLogin(); });
+
+// REALTIME
+function startListening() {
+  const q = query(collection(db, 'polizas'), orderBy('createdAt', 'desc'));
+  unsubscribe = onSnapshot(q, snap => {
+    allRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderTable(); updateStats(); populateRamoFilter();
+  }, err => showToast('Error: ' + err.message, 'error'));
+}
+
+// MODAL
+window.openModal = (id = null) => {
+  editingId = id;
+  document.getElementById('modal-title').textContent = id ? 'Editar póliza' : 'Nueva póliza';
+  ['ramo','poliza','aniversario','cliente','rfc','nacimiento','contacto','email','pago','propietario','agente','notas']
+    .forEach(f => { document.getElementById('field-'+f).value = ''; });
+  if (id) {
+    const rec = allRecords.find(r => r.id === id);
+    if (rec) ['ramo','poliza','aniversario','cliente','rfc','nacimiento','contacto','email','pago','propietario','agente','notas']
+      .forEach(f => { if (rec[f]) document.getElementById('field-'+f).value = rec[f]; });
+  }
+  document.getElementById('modal-form').classList.add('open');
+};
+
+window.closeModal = () => { document.getElementById('modal-form').classList.remove('open'); editingId = null; };
+
+window.saveRecord = async () => {
+  const g = f => document.getElementById('field-'+f).value.trim();
+  if (!g('ramo') || !g('poliza') || !g('cliente')) { showToast('Ramo, Póliza y Cliente son obligatorios.', 'error'); return; }
+  const btn = document.getElementById('save-btn');
+  btn.disabled = true; btn.textContent = 'Guardando...';
+  const rec = {
+    ramo:g('ramo'), poliza:g('poliza'), aniversario:g('aniversario'),
+    cliente:g('cliente'), rfc:g('rfc'), nacimiento:g('nacimiento'),
+    contacto:g('contacto'), email:g('email'), pago:g('pago'),
+    propietario:g('propietario'), agente:g('agente'), notas:g('notas')
+  };
+  try {
+    if (editingId) {
+      await updateDoc(doc(db, 'polizas', editingId), rec);
+      showToast('Registro actualizado.', 'success');
+    } else {
+      rec.createdAt = new Date().toISOString();
+      await addDoc(collection(db, 'polizas'), rec);
+      showToast('Póliza guardada correctamente.', 'success');
+    }
+    closeModal();
+  } catch(e) { showToast('Error: ' + e.message, 'error'); }
+  finally { btn.disabled = false; btn.textContent = 'Guardar'; }
+};
+
+window.deleteRecord = async id => {
+  if (!confirm('¿Eliminar este registro? No se puede deshacer.')) return;
+  try { await deleteDoc(doc(db, 'polizas', id)); showToast('Registro eliminado.', 'success'); }
+  catch(e) { showToast('Error: ' + e.message, 'error'); }
+};
+
+window.openDetail = id => {
+  const rec = allRecords.find(r => r.id === id);
+  if (!rec) return;
+  document.getElementById('detail-title').textContent = `${rec.ramo} — ${rec.poliza}`;
+  const fmt = v => v || '<span style="color:var(--text3)">—</span>';
+  const fmtD = v => v ? new Date(v+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'}) : '<span style="color:var(--text3)">—</span>';
+  document.getElementById('detail-body').innerHTML = `<div class="detail-grid">
+    <div class="detail-item"><label>Ramo</label><div class="val">${fmt(rec.ramo)}</div></div>
+    <div class="detail-item"><label>No. Póliza</label><div class="val" style="font-family:monospace">${fmt(rec.poliza)}</div></div>
+    <div class="detail-item"><label>Cliente</label><div class="val">${fmt(rec.cliente)}</div></div>
+    <div class="detail-item"><label>RFC</label><div class="val" style="font-family:monospace">${fmt(rec.rfc)}</div></div>
+    <div class="detail-item"><label>Fecha de nacimiento</label><div class="val">${fmtD(rec.nacimiento)}</div></div>
+    <div class="detail-item"><label>Aniversario / Renovación</label><div class="val">${fmtD(rec.aniversario)}</div></div>
+    <div class="detail-item"><label>Contacto</label><div class="val">${fmt(rec.contacto)}</div></div>
+    <div class="detail-item"><label>Correo electrónico</label><div class="val">${rec.email?`<a href="mailto:${rec.email}" style="color:var(--accent-text)">${rec.email}</a>`:fmt('')}</div></div>
+    <div class="detail-item"><label>Forma de pago</label><div class="val">${fmt(rec.pago)}</div></div>
+    <div class="detail-item"><label>Propietario del contacto</label><div class="val">${fmt(rec.propietario)}</div></div>
+    <div class="detail-item full"><label>Agente registrado</label><div class="val">${fmt(rec.agente)}</div></div>
+    ${rec.notas?`<div class="detail-item full"><label>Notas</label><div class="val" style="white-space:pre-wrap;line-height:1.6">${rec.notas}</div></div>`:''}
+  </div>`;
+  document.getElementById('detail-edit-btn').onclick = () => { closeDetail(); openModal(id); };
+  document.getElementById('modal-detail').classList.add('open');
+};
+
+window.closeDetail = () => document.getElementById('modal-detail').classList.remove('open');
+
 function filtered() {
-  const q = (document.getElementById('search-input')?.value || '').toLowerCase();
-  const ramo = document.getElementById('filter-ramo')?.value || '';
-  return getData().filter(r => {
-    const match = !q || [r.cliente, r.poliza, r.rfc, r.ramo, r.agente, r.email].join(' ').toLowerCase().includes(q);
-    const ramoMatch = !ramo || r.ramo === ramo;
-    return match && ramoMatch;
+  const q = (document.getElementById('search-input')?.value||'').toLowerCase();
+  const ramo = document.getElementById('filter-ramo')?.value||'';
+  return allRecords.filter(r => {
+    const m = !q || [r.cliente,r.poliza,r.rfc,r.ramo,r.agente,r.email].join(' ').toLowerCase().includes(q);
+    return m && (!ramo || r.ramo === ramo);
   });
 }
 
-function renderTable() {
+window.renderTable = () => {
   const data = filtered();
   const total = data.length;
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
   currentPage = Math.min(currentPage, totalPages);
-  const page = data.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
-
+  const page = data.slice((currentPage-1)*PER_PAGE, currentPage*PER_PAGE);
   const tbody = document.getElementById('table-body');
   const empty = document.getElementById('empty-state');
-
-  if (page.length === 0) {
-    tbody.innerHTML = '';
-    empty.style.display = 'block';
-  } else {
+  if (!page.length) { tbody.innerHTML = ''; empty.style.display = 'block'; }
+  else {
     empty.style.display = 'none';
     tbody.innerHTML = page.map(r => {
-      const badge = RAMO_BADGES[r.ramo] || 'badge-blue';
-      const aniv = r.aniversario ? new Date(r.aniversario + 'T00:00:00').toLocaleDateString('es-MX', {day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
+      const badge = RAMO_BADGES[r.ramo]||'badge-blue';
+      const aniv = r.aniversario ? new Date(r.aniversario+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
       return `<tr>
-        <td><span class="badge ${badge}">${r.ramo || '—'}</span></td>
-        <td style="font-family:monospace;font-size:12px">${r.poliza || '—'}</td>
-        <td style="font-weight:500">${r.cliente || '—'}</td>
-        <td style="font-family:monospace;font-size:12px;color:var(--text2)">${r.rfc || '—'}</td>
-        <td>${aniv}</td>
-        <td>${r.pago || '—'}</td>
-        <td style="color:var(--text2)">${r.agente || '—'}</td>
+        <td><span class="badge ${badge}">${r.ramo||'—'}</span></td>
+        <td style="font-family:monospace;font-size:12px">${r.poliza||'—'}</td>
+        <td style="font-weight:500">${r.cliente||'—'}</td>
+        <td style="font-family:monospace;font-size:12px;color:var(--text2)">${r.rfc||'—'}</td>
+        <td>${aniv}</td><td>${r.pago||'—'}</td>
+        <td style="color:var(--text2)">${r.agente||'—'}</td>
         <td><div class="actions-cell">
           <button class="btn btn-outline btn-sm" onclick="openDetail('${r.id}')">Ver</button>
           <button class="btn btn-outline btn-sm" onclick="openModal('${r.id}')">Editar</button>
@@ -1019,65 +461,48 @@ function renderTable() {
       </tr>`;
     }).join('');
   }
-
-  // pagination
-  const info = document.getElementById('pagination-info');
+  document.getElementById('pagination-info').textContent = `${total} registro${total!==1?'s':''}`;
   const btns = document.getElementById('pagination-btns');
-  info.textContent = `${total} registro${total !== 1 ? 's' : ''}`;
   let html = `<button onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹ Ant</button>`;
   const range = [];
-  for (let i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) range.push(i);
-    else if (range[range.length-1] !== '…') range.push('…');
+  for (let i=1;i<=totalPages;i++) {
+    if (i===1||i===totalPages||Math.abs(i-currentPage)<=1) range.push(i);
+    else if (range[range.length-1]!=='…') range.push('…');
   }
-  range.forEach(p => {
-    if (p === '…') html += `<button disabled>…</button>`;
-    else html += `<button class="${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
-  });
+  range.forEach(p => { html += p==='…'?`<button disabled>…</button>`:`<button class="${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`; });
   html += `<button onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>Sig ›</button>`;
   btns.innerHTML = html;
-}
+};
 
-function goPage(p) {
-  const total = filtered().length;
-  const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
-  currentPage = Math.max(1, Math.min(p, totalPages));
+window.goPage = p => {
+  currentPage = Math.max(1, Math.min(p, Math.max(1,Math.ceil(filtered().length/PER_PAGE))));
   renderTable();
-}
+};
 
-// ─── STATS ───────────────────────────────────────────────
 function updateStats() {
-  const data = getData();
-  document.getElementById('stat-total').textContent = data.length;
-  document.getElementById('stat-clients').textContent = new Set(data.map(r => r.cliente.trim().toLowerCase()).filter(Boolean)).size;
-  document.getElementById('stat-ramos').textContent = new Set(data.map(r => r.ramo).filter(Boolean)).size;
-  document.getElementById('stat-noemail').textContent = data.filter(r => !r.email).length;
+  document.getElementById('stat-total').textContent = allRecords.length;
+  document.getElementById('stat-clients').textContent = new Set(allRecords.map(r=>(r.cliente||'').trim().toLowerCase()).filter(Boolean)).size;
+  document.getElementById('stat-ramos').textContent = new Set(allRecords.map(r=>r.ramo).filter(Boolean)).size;
+  document.getElementById('stat-noemail').textContent = allRecords.filter(r=>!r.email).length;
 }
 
 function populateRamoFilter() {
-  const ramos = [...new Set(getData().map(r => r.ramo).filter(Boolean))].sort();
+  const ramos = [...new Set(allRecords.map(r=>r.ramo).filter(Boolean))].sort();
   const sel = document.getElementById('filter-ramo');
   const cur = sel.value;
-  sel.innerHTML = '<option value="">Todos los ramos</option>' + ramos.map(r => `<option ${r===cur?'selected':''}>${r}</option>`).join('');
+  sel.innerHTML = '<option value="">Todos los ramos</option>' + ramos.map(r=>`<option ${r===cur?'selected':''}>${r}</option>`).join('');
 }
 
-// ─── TOAST ───────────────────────────────────────────────
 let toastTimer;
-function showToast(msg, type = 'success') {
+window.showToast = (msg, type='success') => {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = `show ${type}`;
+  t.textContent = msg; t.className = `show ${type}`;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.className = ''; }, 3000);
-}
+  toastTimer = setTimeout(()=>{ t.className=''; }, 3000);
+};
 
-// ─── BACKDROP CLOSE ──────────────────────────────────────
-document.getElementById('modal-form').addEventListener('click', e => {
-  if (e.target === document.getElementById('modal-form')) closeModal();
-});
-document.getElementById('modal-detail').addEventListener('click', e => {
-  if (e.target === document.getElementById('modal-detail')) closeDetail();
-});
+document.getElementById('modal-form').addEventListener('click', e => { if(e.target===document.getElementById('modal-form')) closeModal(); });
+document.getElementById('modal-detail').addEventListener('click', e => { if(e.target===document.getElementById('modal-detail')) closeDetail(); });
 </script>
 </body>
 </html>
