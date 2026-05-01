@@ -10,7 +10,7 @@
   :root {
     --bg: #f5f4f0; --surface: #ffffff; --surface2: #f0efe9;
     --border: #e0ddd5; --border2: #ccc9be; --text: #1a1916;
-    --text2: #6b6860; --text3: #9e9b92; --accent: #1a4a8a;
+    --text2: #6b6860; --text3: #9e9b92; --accent: #000000;
     --accent-light: #e8eef7; --accent-text: #1a4a8a;
     --danger: #a32d2d; --danger-light: #fcebeb;
     --success: #3b6d11; --success-light: #eaf3de;
@@ -25,7 +25,7 @@
   .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  #login-screen { min-height: 100vh; display: none; align-items: center; justify-content: center; background: linear-gradient(135deg, #0d2d5e 0%, #1a4a8a 60%, #2563b0 100%); }
+  #login-screen { min-height: 100vh; display: none; align-items: center; justify-content: center; background: var(--accent); }
   .login-card { background: var(--surface); border-radius: 16px; padding: 2.5rem 2rem; width: 360px; box-shadow: var(--shadow-md); }
   .login-logo { text-align: center; margin-bottom: 1.75rem; }
   .login-logo .shield { width: 48px; height: 56px; background: var(--accent); border-radius: 8px 8px 24px 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; color: #fff; font-size: 22px; }
@@ -37,7 +37,7 @@
   .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,74,138,0.12); }
   .form-group textarea { resize: vertical; min-height: 72px; }
   .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--radius-sm); font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; white-space: nowrap; }
-  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); width: 100%; justify-content: center; padding: 11px 16px; font-size: 14px; }
+  .btn-primary { background: var(--accent); color: #eab436; border-color: var(--accent); width: 100%; justify-content: center; padding: 11px 16px; font-size: 14px; }
   .btn-primary:hover { background: #153d72; }
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
   .btn-outline { background: transparent; color: var(--text); border-color: var(--border2); }
@@ -49,7 +49,7 @@
   .login-error { background: var(--danger-light); color: var(--danger); border: 1px solid #f09595; border-radius: var(--radius-sm); padding: 9px 12px; font-size: 13px; margin-bottom: 1rem; display: none; }
 
   #app { display: none; min-height: 100vh; }
-  .topbar { background: #0d2d5e; color: #fff; padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+  .topbar { background: var(--accent); color: #fff; padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
   .topbar-brand { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
   .topbar-brand .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; }
   .topbar-right { display: flex; align-items: center; gap: 12px; }
@@ -144,9 +144,7 @@
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
-      <div class="shield">🛡</div>
-      <h1>BH Asociados</h1>
-      <p>CRM de pólizas y clientes</p>
+      <img src="/Logo.webp" alt="Logo" width="120" height="120">
     </div>
     <div class="login-error" id="login-error"></div>
     <div class="form-group">
@@ -164,7 +162,7 @@
 <div id="app">
   <div class="topbar">
     <div class="topbar-brand">
-      <span>🛡</span>
+      <img src="/Logo.webp" alt="Logo" width="50" height="50">
       <span>BH Asociados CRM</span>
       <span class="dot"></span>
     </div>
