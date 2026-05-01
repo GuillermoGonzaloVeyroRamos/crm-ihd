@@ -67,3 +67,13 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+serviceAccountKey.json
+
+Concentrado_clientes.xlsx
+
+importar-datos.js
+
+package-lock.json
+
+package.json
