@@ -21,64 +21,72 @@
   }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 14px; line-height: 1.5; }
 
+  /* ── LOADING ── */
   #loading-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg); flex-direction: column; gap: 12px; }
   .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  #login-screen { min-height: 100vh; display: none; align-items: center; justify-content: center; background: var(--accent); }
-  .login-card { background: var(--surface); border-radius: 16px; padding: 2.5rem 2rem; width: 360px; box-shadow: var(--shadow-md); }
+  /* ── LOGIN ── */
+  #login-screen { min-height: 100vh; display: none; align-items: center; justify-content: center; background: var(--accent); padding: 1rem; }
+  .login-card { background: var(--surface); border-radius: 16px; padding: 2.5rem 2rem; width: 100%; max-width: 380px; box-shadow: var(--shadow-md); }
   .login-logo { text-align: center; margin-bottom: 1.75rem; }
-  .login-logo .shield { width: 48px; height: 56px; background: var(--accent); border-radius: 8px 8px 24px 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; color: #fff; font-size: 22px; }
-  .login-logo h1 { font-size: 20px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
-  .login-logo p { font-size: 13px; color: var(--text2); margin-top: 2px; }
+  .login-logo img { max-width: 120px; height: auto; }
   .form-group { margin-bottom: 1rem; }
   .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .form-group input, .form-group select, .form-group textarea { width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 12px; font-family: inherit; font-size: 14px; color: var(--text); background: var(--surface); transition: border-color 0.15s, box-shadow 0.15s; outline: none; }
-  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,74,138,0.12); }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; font-family: inherit; font-size: 15px; color: var(--text); background: var(--surface); transition: border-color 0.15s, box-shadow 0.15s; outline: none; -webkit-appearance: none; appearance: none; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #555; box-shadow: 0 0 0 3px rgba(0,0,0,0.1); }
   .form-group textarea { resize: vertical; min-height: 72px; }
-  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: var(--radius-sm); font-family: inherit; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; white-space: nowrap; }
-  .btn-primary { background: var(--accent); color: #eab436; border-color: var(--accent); width: 100%; justify-content: center; padding: 11px 16px; font-size: 14px; }
-  .btn-primary:hover { background: #153d72; }
+  .form-group select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b6860' d='M1 1l5 5 5-5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px; border-radius: var(--radius-sm); font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+  .btn-primary { background: var(--accent); color: #eab436; border-color: var(--accent); width: 100%; padding: 13px 16px; font-size: 15px; }
+  .btn-primary:active { opacity: 0.85; }
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
   .btn-outline { background: transparent; color: var(--text); border-color: var(--border2); }
   .btn-outline:hover { background: var(--surface2); }
-  .btn-danger { background: var(--danger-light); color: var(--danger); border-color: transparent; }
+  .btn-danger { background: var(--danger-light); color: var(--danger); }
   .btn-danger:hover { background: #f7c1c1; }
-  .btn-success { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-success { background: var(--accent); color: #fff; }
+  .btn-sm { padding: 6px 11px; font-size: 12px; }
   .login-error { background: var(--danger-light); color: var(--danger); border: 1px solid #f09595; border-radius: var(--radius-sm); padding: 9px 12px; font-size: 13px; margin-bottom: 1rem; display: none; }
 
+  /* ── TOPBAR ── */
   #app { display: none; min-height: 100vh; }
-  .topbar { background: var(--accent); color: #fff; padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
-  .topbar-brand { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; letter-spacing: -0.2px; }
-  .topbar-brand .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; }
-  .topbar-right { display: flex; align-items: center; gap: 12px; }
-  .topbar-right .user-badge { background: rgba(255,255,255,0.15); border-radius: 99px; padding: 4px 12px; font-size: 12px; color: #fff; font-weight: 500; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .topbar-right button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: var(--radius-sm); padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 500; transition: background 0.15s; }
+  .topbar { background: var(--accent); color: #fff; padding: 0 1rem; height: 56px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+  .topbar-brand { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; overflow: hidden; }
+  .topbar-brand img { width: 36px; height: 36px; object-fit: contain; flex-shrink: 0; }
+  .topbar-brand span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar-brand .dot { width: 7px; height: 7px; background: #4ade80; border-radius: 50%; flex-shrink: 0; }
+  .topbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .topbar-right .user-badge { background: rgba(255,255,255,0.15); border-radius: 99px; padding: 4px 10px; font-size: 11px; color: #fff; font-weight: 500; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: none; }
+  .topbar-right button { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: #fff; border-radius: var(--radius-sm); padding: 6px 12px; font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 500; transition: background 0.15s; -webkit-tap-highlight-color: transparent; }
   .topbar-right button:hover { background: rgba(255,255,255,0.2); }
-  .main-content { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
 
-  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 1.5rem; }
-  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; box-shadow: var(--shadow); }
-  .stat-card .label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px; }
-  .stat-card .value { font-size: 26px; font-weight: 600; color: var(--text); letter-spacing: -0.5px; line-height: 1.1; }
-  .stat-card .sub { font-size: 12px; color: var(--text3); margin-top: 2px; }
+  /* ── MAIN ── */
+  .main-content { max-width: 1280px; margin: 0 auto; padding: 1rem; }
+
+  /* ── STATS ── */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.875rem 1rem; box-shadow: var(--shadow); }
+  .stat-card .label { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 3px; }
+  .stat-card .value { font-size: 24px; font-weight: 600; color: var(--text); letter-spacing: -0.5px; line-height: 1.1; }
+  .stat-card .sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
   .stat-card.accent { border-left: 3px solid var(--accent); }
   .stat-card.success { border-left: 3px solid var(--success); }
   .stat-card.amber { border-left: 3px solid var(--amber); }
   .stat-card.danger { border-left: 3px solid var(--danger); }
 
-  .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; flex-wrap: wrap; }
-  .toolbar h2 { font-size: 16px; font-weight: 600; color: var(--text); letter-spacing: -0.2px; flex: 1; }
-  .search-box { position: relative; flex: 1; max-width: 300px; }
-  .search-box input { width: 100%; padding: 8px 12px 8px 34px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--surface); color: var(--text); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
-  .search-box input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,74,138,0.1); }
+  /* ── TOOLBAR ── */
+  .toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .toolbar h2 { font-size: 15px; font-weight: 600; color: var(--text); flex: 1; min-width: 100px; }
+  .search-box { position: relative; flex: 1; min-width: 160px; max-width: 300px; }
+  .search-box input { width: 100%; padding: 9px 12px 9px 34px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-family: inherit; background: var(--surface); color: var(--text); outline: none; }
+  .search-box input:focus { border-color: #555; box-shadow: 0 0 0 3px rgba(0,0,0,0.08); }
   .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; pointer-events: none; }
-  .filter-select { padding: 8px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--surface); color: var(--text); outline: none; cursor: pointer; }
-  .filter-select:focus { border-color: var(--accent); }
+  .filter-select { padding: 9px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; background: var(--surface); color: var(--text); outline: none; cursor: pointer; -webkit-appearance: none; appearance: none; }
 
+  /* ── TABLE (desktop) ── */
   .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-  .table-wrap table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .desktop-table { width: 100%; border-collapse: collapse; font-size: 13px; }
   thead { background: var(--surface2); }
   thead th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
@@ -90,47 +98,94 @@
   .badge-green { background: var(--success-light); color: var(--success); }
   .badge-amber { background: var(--amber-light); color: var(--amber); }
   .badge-red { background: var(--danger-light); color: var(--danger); }
-  .actions-cell { display: flex; gap: 6px; }
+  .actions-cell { display: flex; gap: 5px; }
+
+  /* ── CARDS (móvil) ── */
+  .mobile-cards { display: none; }
+  .record-card { border-bottom: 1px solid var(--border); padding: 14px 16px; background: var(--surface); transition: background 0.1s; }
+  .record-card:last-child { border-bottom: none; }
+  .record-card:active { background: #f8f7f4; }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .card-name { font-weight: 600; font-size: 14px; color: var(--text); line-height: 1.3; }
+  .card-poliza { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 2px; }
+  .card-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .card-meta-item { font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 3px; }
+  .card-meta-item strong { color: var(--text); font-weight: 500; }
+  .card-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .card-actions .btn { flex: 1; font-size: 13px; padding: 8px; }
+
+  /* ── EMPTY / PAGINATION ── */
   .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text3); }
   .empty-state .icon { font-size: 40px; margin-bottom: 0.75rem; }
-
-  .pagination { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-top: 1px solid var(--border); font-size: 12px; color: var(--text3); background: var(--surface2); }
-  .pagination-btns { display: flex; gap: 4px; }
-  .pagination-btns button { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-size: 12px; cursor: pointer; font-family: inherit; color: var(--text); transition: all 0.15s; }
-  .pagination-btns button:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+  .pagination { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-top: 1px solid var(--border); font-size: 12px; color: var(--text3); background: var(--surface2); flex-wrap: wrap; gap: 8px; }
+  .pagination-btns { display: flex; gap: 4px; flex-wrap: wrap; }
+  .pagination-btns button { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 5px 11px; font-size: 12px; cursor: pointer; font-family: inherit; color: var(--text); transition: all 0.15s; min-width: 36px; -webkit-tap-highlight-color: transparent; }
+  .pagination-btns button:hover { background: var(--accent-light); border-color: #555; }
   .pagination-btns button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   .pagination-btns button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .modal-backdrop { position: fixed; inset: 0; background: rgba(10,20,40,0.45); z-index: 200; display: none; align-items: flex-start; justify-content: center; padding: 2rem 1rem; overflow-y: auto; }
+  /* ── MODAL ── */
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(10,20,40,0.5); z-index: 200; display: none; align-items: flex-end; justify-content: center; overflow-y: auto; }
   .modal-backdrop.open { display: flex; }
-  .modal { background: var(--surface); border-radius: 14px; width: 100%; max-width: 680px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); overflow: hidden; margin: auto; }
-  .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface2); }
+  .modal { background: var(--surface); border-radius: 16px 16px 0 0; width: 100%; max-width: 100%; box-shadow: 0 -4px 30px rgba(0,0,0,0.2); overflow: hidden; margin-top: auto; max-height: 92vh; display: flex; flex-direction: column; }
+  .modal-header { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface2); flex-shrink: 0; }
   .modal-header h3 { font-size: 15px; font-weight: 600; color: var(--text); }
-  .modal-close { background: none; border: none; cursor: pointer; font-size: 18px; color: var(--text3); padding: 2px 6px; border-radius: 4px; transition: background 0.15s; }
+  .modal-close { background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text3); padding: 4px 8px; border-radius: 4px; line-height: 1; -webkit-tap-highlight-color: transparent; }
   .modal-close:hover { background: var(--border); color: var(--text); }
-  .modal-body { padding: 1.5rem; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .modal-body { padding: 1.25rem; overflow-y: auto; flex: 1; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem; }
   .form-grid .full { grid-column: 1 / -1; }
-  .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; background: var(--surface2); }
+  .modal-footer { padding: 0.875rem 1.25rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; background: var(--surface2); flex-shrink: 0; padding-bottom: max(0.875rem, env(safe-area-inset-bottom)); }
 
+  /* ── DETAIL ── */
   .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .detail-item label { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 3px; }
   .detail-item .val { font-size: 14px; color: var(--text); }
   .detail-item.full { grid-column: 1 / -1; }
 
-  #toast { position: fixed; bottom: 1.5rem; right: 1.5rem; padding: 10px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; z-index: 999; box-shadow: var(--shadow-md); transform: translateY(10px); opacity: 0; transition: all 0.25s; pointer-events: none; }
-  #toast.show { opacity: 1; transform: translateY(0); }
+  /* ── TOAST ── */
+  #toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(20px); padding: 10px 20px; border-radius: 99px; font-size: 13px; font-weight: 500; z-index: 999; box-shadow: var(--shadow-md); opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   #toast.success { background: var(--success-light); color: var(--success); border: 1px solid #c0dd97; }
   #toast.error { background: var(--danger-light); color: var(--danger); border: 1px solid #f09595; }
 
-  @media (max-width: 768px) {
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  /* ── RESPONSIVE ── */
+
+  /* Tablet: 600–1024px */
+  @media (min-width: 600px) {
+    .main-content { padding: 1.25rem; }
+    .topbar { padding: 0 1.25rem; }
+    .topbar-right .user-badge { display: block; }
+    .modal { border-radius: 14px; max-width: 640px; margin: auto; max-height: 90vh; }
+    .modal-backdrop { align-items: center; padding: 1.5rem; }
+  }
+
+  /* Desktop: >1024px */
+  @media (min-width: 1024px) {
+    .main-content { padding: 1.5rem; }
+    .topbar { padding: 0 1.5rem; height: 52px; }
+    .topbar-brand { font-size: 15px; }
+    .modal { max-width: 680px; }
+  }
+
+  /* Móvil: <600px — layout de tarjetas */
+  @media (max-width: 599px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .stat-card .value { font-size: 20px; }
+    .toolbar { gap: 6px; }
+    .toolbar h2 { font-size: 14px; width: 100%; flex: none; }
+    .search-box { max-width: 100%; flex: 1; }
+    .filter-select { flex: 1; }
+    .toolbar .btn { width: 100%; margin-top: 2px; }
+    .desktop-table { display: none; }
+    .mobile-cards { display: block; }
     .form-grid { grid-template-columns: 1fr; }
     .form-grid .full { grid-column: 1; }
     .detail-grid { grid-template-columns: 1fr; }
     .detail-item.full { grid-column: 1; }
-    thead th:nth-child(n+5) { display: none; }
-    tbody td:nth-child(n+5) { display: none; }
+    .modal-footer { flex-direction: column-reverse; }
+    .modal-footer .btn { width: 100%; }
+    #toast { width: calc(100% - 2rem); text-align: center; white-space: normal; }
   }
 </style>
 </head>
@@ -144,12 +199,12 @@
 <div id="login-screen">
   <div class="login-card">
     <div class="login-logo">
-      <img src="/Logo.webp" alt="Logo" width="120" height="120">
+      <img src="/Logo.webp" alt="Logo BH Asociados" width="120" height="120">
     </div>
     <div class="login-error" id="login-error"></div>
     <div class="form-group">
       <label>Correo electrónico</label>
-      <input type="email" id="login-email" placeholder="correo@ejemplo.com" autocomplete="email">
+      <input type="email" id="login-email" placeholder="correo@ejemplo.com" autocomplete="email" inputmode="email">
     </div>
     <div class="form-group">
       <label>Contraseña</label>
@@ -162,35 +217,39 @@
 <div id="app">
   <div class="topbar">
     <div class="topbar-brand">
-      <img src="/Logo.webp" alt="Logo" width="50" height="50">
+      <img src="/Logo.webp" alt="Logo">
       <span>BH Asociados CRM</span>
       <span class="dot"></span>
     </div>
     <div class="topbar-right">
       <span class="user-badge" id="topbar-user">—</span>
-      <button onclick="doLogout()">Cerrar sesión</button>
+      <button onclick="doLogout()">Salir</button>
     </div>
   </div>
+
   <div class="main-content">
     <div class="stats-row">
-      <div class="stat-card accent"><div class="label">Total pólizas</div><div class="value" id="stat-total">—</div><div class="sub">registros activos</div></div>
-      <div class="stat-card success"><div class="label">Clientes únicos</div><div class="value" id="stat-clients">—</div><div class="sub">en base de datos</div></div>
-      <div class="stat-card amber"><div class="label">Ramos distintos</div><div class="value" id="stat-ramos">—</div><div class="sub">tipos de seguro</div></div>
-      <div class="stat-card danger"><div class="label">Sin correo</div><div class="value" id="stat-noemail">—</div><div class="sub">datos incompletos</div></div>
+      <div class="stat-card accent"><div class="label">Total pólizas</div><div class="value" id="stat-total">—</div><div class="sub">registros</div></div>
+      <div class="stat-card success"><div class="label">Clientes</div><div class="value" id="stat-clients">—</div><div class="sub">únicos</div></div>
+      <div class="stat-card amber"><div class="label">Ramos</div><div class="value" id="stat-ramos">—</div><div class="sub">distintos</div></div>
+      <div class="stat-card danger"><div class="label">Sin correo</div><div class="value" id="stat-noemail">—</div><div class="sub">incompletos</div></div>
     </div>
+
     <div class="toolbar">
       <h2>Pólizas y clientes</h2>
       <div class="search-box">
         <span class="search-icon">🔍</span>
-        <input type="text" id="search-input" placeholder="Buscar cliente, póliza, RFC..." oninput="renderTable()">
+        <input type="text" id="search-input" placeholder="Buscar..." oninput="renderTable()" autocomplete="off">
       </div>
       <select class="filter-select" id="filter-ramo" onchange="renderTable()">
         <option value="">Todos los ramos</option>
       </select>
       <button class="btn btn-success" onclick="openModal()">+ Nueva póliza</button>
     </div>
+
     <div class="table-wrap">
-      <table>
+      <!-- Tabla desktop -->
+      <table class="desktop-table">
         <thead>
           <tr>
             <th>Ramo</th><th>No. Póliza</th><th>Cliente</th><th>RFC</th>
@@ -199,6 +258,9 @@
         </thead>
         <tbody id="table-body"></tbody>
       </table>
+      <!-- Tarjetas móvil -->
+      <div class="mobile-cards" id="mobile-cards"></div>
+
       <div id="empty-state" class="empty-state" style="display:none">
         <div class="icon">📋</div>
         <p>No hay registros. Agrega una nueva póliza.</p>
@@ -211,6 +273,7 @@
   </div>
 </div>
 
+<!-- MODAL FORM -->
 <div class="modal-backdrop" id="modal-form">
   <div class="modal">
     <div class="modal-header">
@@ -230,13 +293,13 @@
             <option>Accidentes Personales</option><option>Otro</option>
           </select>
         </div>
-        <div class="form-group"><label>No. de Póliza *</label><input type="text" id="field-poliza" placeholder="Ej. 12345-A"></div>
+        <div class="form-group"><label>No. de Póliza *</label><input type="text" id="field-poliza" placeholder="Ej. 12345-A" autocomplete="off"></div>
         <div class="form-group"><label>Aniversario / Renovación</label><input type="date" id="field-aniversario"></div>
-        <div class="form-group"><label>Cliente *</label><input type="text" id="field-cliente" placeholder="Nombre completo"></div>
-        <div class="form-group"><label>RFC</label><input type="text" id="field-rfc" placeholder="Ej. XAXX010101000" style="font-family:'DM Mono',monospace"></div>
+        <div class="form-group"><label>Cliente *</label><input type="text" id="field-cliente" placeholder="Nombre completo" autocomplete="off"></div>
+        <div class="form-group"><label>RFC</label><input type="text" id="field-rfc" placeholder="XAXX010101000" style="font-family:'DM Mono',monospace;text-transform:uppercase" autocomplete="off"></div>
         <div class="form-group"><label>Fecha de nacimiento</label><input type="date" id="field-nacimiento"></div>
-        <div class="form-group"><label>Contacto (teléfono)</label><input type="tel" id="field-contacto" placeholder="10 dígitos"></div>
-        <div class="form-group"><label>Correo electrónico</label><input type="email" id="field-email" placeholder="correo@ejemplo.com"></div>
+        <div class="form-group"><label>Contacto (teléfono)</label><input type="tel" id="field-contacto" placeholder="10 dígitos" inputmode="tel"></div>
+        <div class="form-group"><label>Correo electrónico</label><input type="email" id="field-email" placeholder="correo@ejemplo.com" inputmode="email"></div>
         <div class="form-group">
           <label>Forma de pago</label>
           <select id="field-pago">
@@ -244,8 +307,8 @@
             <option>Anual</option><option>Semestral</option><option>Trimestral</option><option>Mensual</option><option>Otro</option>
           </select>
         </div>
-        <div class="form-group"><label>Propietario del contacto</label><input type="text" id="field-propietario" placeholder="Nombre"></div>
-        <div class="form-group"><label>Agente registrado</label><input type="text" id="field-agente" placeholder="Nombre del agente"></div>
+        <div class="form-group"><label>Propietario del contacto</label><input type="text" id="field-propietario" placeholder="Nombre" autocomplete="off"></div>
+        <div class="form-group"><label>Agente registrado</label><input type="text" id="field-agente" placeholder="Nombre del agente" autocomplete="off"></div>
         <div class="form-group full"><label>Notas</label><textarea id="field-notas" placeholder="Observaciones..."></textarea></div>
       </div>
     </div>
@@ -256,6 +319,7 @@
   </div>
 </div>
 
+<!-- MODAL DETAIL -->
 <div class="modal-backdrop" id="modal-detail">
   <div class="modal">
     <div class="modal-header">
@@ -300,10 +364,11 @@ const RAMO_BADGES = {
   'Autos':'badge-blue','Vida':'badge-green','Gastos Médicos Mayores':'badge-red',
   'Gastos Médicos Menores':'badge-amber','Hogar':'badge-green','Empresarial':'badge-blue',
   'Responsabilidad Civil':'badge-amber','Transporte':'badge-blue',
-  'Accidentes Personales':'badge-red','Otro':'badge-amber'
+  'Accidentes Personales':'badge-red','Otro':'badge-amber',
+  'VIDA BMI':'badge-green','VIDA GNP':'badge-green','GMM GNP':'badge-red'
 };
 
-// AUTH STATE
+// ── AUTH ──
 onAuthStateChanged(auth, user => {
   document.getElementById('loading-screen').style.display = 'none';
   if (user) {
@@ -336,10 +401,9 @@ window.doLogin = async () => {
 };
 
 window.doLogout = () => signOut(auth);
-
 document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') window.doLogin(); });
 
-// REALTIME
+// ── REALTIME ──
 function startListening() {
   const q = query(collection(db, 'polizas'), orderBy('createdAt', 'desc'));
   unsubscribe = onSnapshot(q, snap => {
@@ -348,18 +412,19 @@ function startListening() {
   }, err => showToast('Error: ' + err.message, 'error'));
 }
 
-// MODAL
+// ── MODAL ──
 window.openModal = (id = null) => {
   editingId = id;
   document.getElementById('modal-title').textContent = id ? 'Editar póliza' : 'Nueva póliza';
-  ['ramo','poliza','aniversario','cliente','rfc','nacimiento','contacto','email','pago','propietario','agente','notas']
-    .forEach(f => { document.getElementById('field-'+f).value = ''; });
+  const fields = ['ramo','poliza','aniversario','cliente','rfc','nacimiento','contacto','email','pago','propietario','agente','notas'];
+  fields.forEach(f => { document.getElementById('field-'+f).value = ''; });
   if (id) {
     const rec = allRecords.find(r => r.id === id);
-    if (rec) ['ramo','poliza','aniversario','cliente','rfc','nacimiento','contacto','email','pago','propietario','agente','notas']
-      .forEach(f => { if (rec[f]) document.getElementById('field-'+f).value = rec[f]; });
+    if (rec) fields.forEach(f => { if (rec[f]) document.getElementById('field-'+f).value = rec[f]; });
   }
   document.getElementById('modal-form').classList.add('open');
+  // scroll al top del modal en móvil
+  setTimeout(() => { document.querySelector('#modal-form .modal-body').scrollTop = 0; }, 50);
 };
 
 window.closeModal = () => { document.getElementById('modal-form').classList.remove('open'); editingId = null; };
@@ -395,6 +460,7 @@ window.deleteRecord = async id => {
   catch(e) { showToast('Error: ' + e.message, 'error'); }
 };
 
+// ── DETAIL ──
 window.openDetail = id => {
   const rec = allRecords.find(r => r.id === id);
   if (!rec) return;
@@ -408,10 +474,10 @@ window.openDetail = id => {
     <div class="detail-item"><label>RFC</label><div class="val" style="font-family:monospace">${fmt(rec.rfc)}</div></div>
     <div class="detail-item"><label>Fecha de nacimiento</label><div class="val">${fmtD(rec.nacimiento)}</div></div>
     <div class="detail-item"><label>Aniversario / Renovación</label><div class="val">${fmtD(rec.aniversario)}</div></div>
-    <div class="detail-item"><label>Contacto</label><div class="val">${fmt(rec.contacto)}</div></div>
+    <div class="detail-item"><label>Contacto</label><div class="val">${rec.contacto?`<a href="tel:${rec.contacto}" style="color:var(--accent-text)">${rec.contacto}</a>`:fmt('')}</div></div>
     <div class="detail-item"><label>Correo electrónico</label><div class="val">${rec.email?`<a href="mailto:${rec.email}" style="color:var(--accent-text)">${rec.email}</a>`:fmt('')}</div></div>
     <div class="detail-item"><label>Forma de pago</label><div class="val">${fmt(rec.pago)}</div></div>
-    <div class="detail-item"><label>Propietario del contacto</label><div class="val">${fmt(rec.propietario)}</div></div>
+    <div class="detail-item"><label>Propietario</label><div class="val">${fmt(rec.propietario)}</div></div>
     <div class="detail-item full"><label>Agente registrado</label><div class="val">${fmt(rec.agente)}</div></div>
     ${rec.notas?`<div class="detail-item full"><label>Notas</label><div class="val" style="white-space:pre-wrap;line-height:1.6">${rec.notas}</div></div>`:''}
   </div>`;
@@ -421,6 +487,7 @@ window.openDetail = id => {
 
 window.closeDetail = () => document.getElementById('modal-detail').classList.remove('open');
 
+// ── TABLE + CARDS ──
 function filtered() {
   const q = (document.getElementById('search-input')?.value||'').toLowerCase();
   const ramo = document.getElementById('filter-ramo')?.value||'';
@@ -436,11 +503,18 @@ window.renderTable = () => {
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
   currentPage = Math.min(currentPage, totalPages);
   const page = data.slice((currentPage-1)*PER_PAGE, currentPage*PER_PAGE);
+
   const tbody = document.getElementById('table-body');
+  const cards = document.getElementById('mobile-cards');
   const empty = document.getElementById('empty-state');
-  if (!page.length) { tbody.innerHTML = ''; empty.style.display = 'block'; }
-  else {
+
+  if (!page.length) {
+    tbody.innerHTML = ''; cards.innerHTML = '';
+    empty.style.display = 'block';
+  } else {
     empty.style.display = 'none';
+
+    // Tabla desktop
     tbody.innerHTML = page.map(r => {
       const badge = RAMO_BADGES[r.ramo]||'badge-blue';
       const aniv = r.aniversario ? new Date(r.aniversario+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
@@ -458,23 +532,52 @@ window.renderTable = () => {
         </div></td>
       </tr>`;
     }).join('');
+
+    // Tarjetas móvil
+    cards.innerHTML = page.map(r => {
+      const badge = RAMO_BADGES[r.ramo]||'badge-blue';
+      const aniv = r.aniversario ? new Date(r.aniversario+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+      return `<div class="record-card">
+        <div class="card-top">
+          <div>
+            <div class="card-name">${r.cliente||'—'}</div>
+            <div class="card-poliza">${r.poliza||'—'}</div>
+          </div>
+          <span class="badge ${badge}">${r.ramo||'—'}</span>
+        </div>
+        <div class="card-meta">
+          ${r.pago?`<span class="card-meta-item">💳 <strong>${r.pago}</strong></span>`:''}
+          ${aniv!=='—'?`<span class="card-meta-item">📅 <strong>${aniv}</strong></span>`:''}
+          ${r.agente?`<span class="card-meta-item">👤 ${r.agente}</span>`:''}
+          ${r.contacto?`<span class="card-meta-item">📞 ${r.contacto}</span>`:''}
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-outline" onclick="openDetail('${r.id}')">Ver</button>
+          <button class="btn btn-outline" onclick="openModal('${r.id}')">Editar</button>
+          <button class="btn btn-danger" onclick="deleteRecord('${r.id}')">Eliminar</button>
+        </div>
+      </div>`;
+    }).join('');
   }
+
+  // Paginación
   document.getElementById('pagination-info').textContent = `${total} registro${total!==1?'s':''}`;
   const btns = document.getElementById('pagination-btns');
-  let html = `<button onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹ Ant</button>`;
+  let html = `<button onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
   const range = [];
   for (let i=1;i<=totalPages;i++) {
     if (i===1||i===totalPages||Math.abs(i-currentPage)<=1) range.push(i);
     else if (range[range.length-1]!=='…') range.push('…');
   }
   range.forEach(p => { html += p==='…'?`<button disabled>…</button>`:`<button class="${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`; });
-  html += `<button onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>Sig ›</button>`;
+  html += `<button onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>›</button>`;
   btns.innerHTML = html;
 };
 
 window.goPage = p => {
   currentPage = Math.max(1, Math.min(p, Math.max(1,Math.ceil(filtered().length/PER_PAGE))));
   renderTable();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 function updateStats() {
@@ -499,6 +602,7 @@ window.showToast = (msg, type='success') => {
   toastTimer = setTimeout(()=>{ t.className=''; }, 3000);
 };
 
+// Cerrar modales al tocar el fondo
 document.getElementById('modal-form').addEventListener('click', e => { if(e.target===document.getElementById('modal-form')) closeModal(); });
 document.getElementById('modal-detail').addEventListener('click', e => { if(e.target===document.getElementById('modal-detail')) closeDetail(); });
 </script>
