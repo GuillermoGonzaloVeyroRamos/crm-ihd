@@ -100,11 +100,31 @@
   .badge-red { background: var(--danger-light); color: var(--danger); }
   .actions-cell { display: flex; gap: 5px; }
 
+  /* ── CLIENTE: chips de ramos en la tabla ── */
+  .ramo-chips { display: flex; flex-wrap: wrap; gap: 4px; max-width: 260px; }
+  .poliza-count { display: inline-block; background: var(--surface2); color: var(--text2); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 99px; }
+
+  /* ── ALERTAS de fecha próxima (cumpleaños / vencimiento) ── */
+  .alert-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 2px 9px; border-radius: 99px; white-space: nowrap; }
+  .alert-chip.birthday { background: #fde7f3; color: #9d1d6b; }
+  .alert-chip.renewal { background: var(--amber-light); color: var(--amber); }
+  .alert-chip.renewal.overdue { background: var(--danger-light); color: var(--danger); }
+  .alert-stack { display: flex; flex-direction: column; gap: 3px; align-items: flex-start; }
+  .row-alert-flag { width: 4px; align-self: stretch; border-radius: 3px; flex-shrink: 0; }
+  .row-alert-flag.birthday { background: #d6428f; }
+  .row-alert-flag.renewal { background: var(--amber); }
+  .row-alert-flag.renewal.overdue { background: var(--danger); }
+  .name-with-flag { display: flex; align-items: center; gap: 8px; }
+  .poliza-aniv-cell { display: flex; align-items: center; gap: 6px; }
+  .client-poliza-item.has-renewal-alert { border-color: var(--amber); background: #fffaf0; }
+  .client-poliza-item.has-renewal-alert.overdue { border-color: var(--danger); background: #fdf3f3; }
+
   /* ── CARDS (móvil) ── */
   .mobile-cards { display: none; }
-  .record-card { border-bottom: 1px solid var(--border); padding: 14px 16px; background: var(--surface); transition: background 0.1s; }
+  .record-card { border-bottom: 1px solid var(--border); padding: 14px 16px; background: var(--surface); transition: background 0.1s; display: flex; gap: 10px; }
   .record-card:last-child { border-bottom: none; }
   .record-card:active { background: #f8f7f4; }
+  .record-card-body { flex: 1; min-width: 0; }
   .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
   .card-name { font-weight: 600; font-size: 14px; color: var(--text); line-height: 1.3; }
   .card-poliza { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 2px; }
@@ -113,6 +133,19 @@
   .card-meta-item strong { color: var(--text); font-weight: 500; }
   .card-actions { display: flex; gap: 8px; margin-top: 10px; }
   .card-actions .btn { flex: 1; font-size: 13px; padding: 8px; }
+
+  /* ── MODAL CLIENTE (lista de pólizas) ── */
+  .client-poliza-item { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 10px; transition: border-color 0.15s; }
+  .client-poliza-item:hover { border-color: var(--border2); }
+  .client-poliza-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .client-poliza-num { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text2); }
+  .client-poliza-meta { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--text2); margin-bottom: 8px; }
+  .client-poliza-meta strong { color: var(--text); font-weight: 500; }
+  .client-poliza-actions { display: flex; gap: 6px; }
+  .client-summary-bar { display: flex; gap: 16px; padding: 12px 14px; background: var(--surface2); border-radius: var(--radius-sm); margin-bottom: 1rem; flex-wrap: wrap; }
+  .client-summary-item { font-size: 12px; color: var(--text2); }
+  .client-summary-item strong { display: block; font-size: 16px; color: var(--text); font-weight: 600; }
+  .add-poliza-row { margin-top: 0.5rem; }
 
   /* ── EMPTY / PAGINATION ── */
   .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text3); }
@@ -252,8 +285,8 @@
       <table class="desktop-table">
         <thead>
           <tr>
-            <th>Ramo</th><th>No. Póliza</th><th>Cliente</th><th>RFC</th>
-            <th>Aniversario</th><th>F. Pago</th><th>Agente</th><th>Acciones</th>
+            <th>Cliente</th><th>RFC</th><th>Ramos</th><th>Pólizas</th>
+            <th>Próximo aniversario</th><th>Agente</th><th>Acciones</th>
           </tr>
         </thead>
         <tbody id="table-body"></tbody>
@@ -319,17 +352,20 @@
   </div>
 </div>
 
-<!-- MODAL DETAIL -->
-<div class="modal-backdrop" id="modal-detail">
-  <div class="modal">
+<!-- MODAL CLIENTE (lista de pólizas) -->
+<div class="modal-backdrop" id="modal-client">
+  <div class="modal" style="max-width:720px">
     <div class="modal-header">
-      <h3 id="detail-title">Detalle de póliza</h3>
-      <button class="modal-close" onclick="closeDetail()">✕</button>
+      <h3 id="client-modal-title">Cliente</h3>
+      <button class="modal-close" onclick="closeClientModal()">✕</button>
     </div>
-    <div class="modal-body" id="detail-body"></div>
+    <div class="modal-body">
+      <div class="client-summary-bar" id="client-summary-bar"></div>
+      <div id="client-poliza-list"></div>
+      <button class="btn btn-success add-poliza-row" onclick="openModalForClient()">+ Agregar póliza a este cliente</button>
+    </div>
     <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeDetail()">Cerrar</button>
-      <button class="btn btn-success" id="detail-edit-btn">Editar</button>
+      <button class="btn btn-outline" onclick="closeClientModal()">Cerrar</button>
     </div>
   </div>
 </div>
@@ -358,6 +394,7 @@ let allRecords = [];
 let unsubscribe = null;
 let editingId = null;
 let currentPage = 1;
+let currentClientKey = null;
 const PER_PAGE = 12;
 
 const RAMO_BADGES = {
@@ -367,6 +404,64 @@ const RAMO_BADGES = {
   'Accidentes Personales':'badge-red','Otro':'badge-amber',
   'VIDA BMI':'badge-green','VIDA GNP':'badge-green','GMM GNP':'badge-red'
 };
+
+const ALERT_WINDOW_DAYS = 7;
+
+// Calcula días hasta la próxima ocurrencia anual de una fecha (YYYY-MM-DD),
+// ignorando el año original. Retorna { days, isToday, isPast(dentro de ventana ya vencida) }
+function daysUntilNextAnniversary(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr + 'T00:00:00');
+  if (isNaN(d)) return null;
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  let next = new Date(today.getFullYear(), d.getMonth(), d.getDate());
+  next.setHours(0,0,0,0);
+  // Si ya pasó este año, calcular contra el año pasado (vencida) o el próximo año
+  const diffMs = next - today;
+  const diffDays = Math.round(diffMs / 86400000);
+  if (diffDays < 0) {
+    // Ya pasó este año — ver hace cuántos días (para marcar "vencida reciente")
+    return { days: diffDays, status: diffDays >= -ALERT_WINDOW_DAYS ? 'overdue' : 'none' };
+  }
+  if (diffDays === 0) return { days: 0, status: 'today' };
+  if (diffDays <= ALERT_WINDOW_DAYS) return { days: diffDays, status: 'upcoming' };
+  return { days: diffDays, status: 'none' };
+}
+
+function birthdayAlertChip(nacimiento) {
+  const info = daysUntilNextAnniversary(nacimiento);
+  if (!info || info.status === 'none') return '';
+  if (info.status === 'today') return `<span class="alert-chip birthday">🎂 Hoy</span>`;
+  if (info.status === 'upcoming') return `<span class="alert-chip birthday">🎂 en ${info.days}d</span>`;
+  if (info.status === 'overdue') return `<span class="alert-chip birthday">🎂 hace ${Math.abs(info.days)}d</span>`;
+  return '';
+}
+
+function renewalAlertChip(aniversario) {
+  const info = daysUntilNextAnniversary(aniversario);
+  if (!info || info.status === 'none') return '';
+  if (info.status === 'today') return `<span class="alert-chip renewal">⏰ Vence hoy</span>`;
+  if (info.status === 'upcoming') return `<span class="alert-chip renewal">⏰ en ${info.days}d</span>`;
+  if (info.status === 'overdue') return `<span class="alert-chip renewal overdue">⏰ venció hace ${Math.abs(info.days)}d</span>`;
+  return '';
+}
+
+function clientHasAlert(group) {
+  const hasBirthday = group.records.some(r => {
+    const i = daysUntilNextAnniversary(r.nacimiento);
+    return i && i.status !== 'none';
+  });
+  const hasRenewal = group.records.some(r => {
+    const i = daysUntilNextAnniversary(r.aniversario);
+    return i && i.status !== 'none';
+  });
+  const hasOverdueRenewal = group.records.some(r => {
+    const i = daysUntilNextAnniversary(r.aniversario);
+    return i && i.status === 'overdue';
+  });
+  return { hasBirthday, hasRenewal, hasOverdueRenewal };
+}
 
 // ── AUTH ──
 onAuthStateChanged(auth, user => {
@@ -409,12 +504,20 @@ function startListening() {
   unsubscribe = onSnapshot(q, snap => {
     allRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderTable(); updateStats(); populateRamoFilter();
+    if (currentClientKey && document.getElementById('modal-client').classList.contains('open')) {
+      const stillExists = groupByClient().some(g => g.key === currentClientKey);
+      if (stillExists) openClientModal(currentClientKey);
+      else closeClientModal();
+    }
   }, err => showToast('Error: ' + err.message, 'error'));
 }
 
-// ── MODAL ──
+// ── MODAL (alta/edición de póliza individual) ──
+let presetClient = null; // {cliente, rfc} al agregar póliza desde modal de cliente
+
 window.openModal = (id = null) => {
   editingId = id;
+  presetClient = null;
   document.getElementById('modal-title').textContent = id ? 'Editar póliza' : 'Nueva póliza';
   const fields = ['ramo','poliza','aniversario','cliente','rfc','nacimiento','contacto','email','pago','propietario','agente','notas'];
   fields.forEach(f => { document.getElementById('field-'+f).value = ''; });
@@ -423,11 +526,35 @@ window.openModal = (id = null) => {
     if (rec) fields.forEach(f => { if (rec[f]) document.getElementById('field-'+f).value = rec[f]; });
   }
   document.getElementById('modal-form').classList.add('open');
-  // scroll al top del modal en móvil
   setTimeout(() => { document.querySelector('#modal-form .modal-body').scrollTop = 0; }, 50);
 };
 
-window.closeModal = () => { document.getElementById('modal-form').classList.remove('open'); editingId = null; };
+window.openModalForClient = () => {
+  if (!currentClientKey) return;
+  const group = groupByClient().find(g => g.key === currentClientKey);
+  if (!group) return;
+  editingId = null;
+  closeClientModal();
+  document.getElementById('modal-title').textContent = 'Nueva póliza';
+  const fields = ['ramo','poliza','aniversario','cliente','rfc','nacimiento','contacto','email','pago','propietario','agente','notas'];
+  fields.forEach(f => { document.getElementById('field-'+f).value = ''; });
+  // Pre-rellenar datos del cliente usando su registro más reciente
+  const ref = group.records[0];
+  ['cliente','rfc','nacimiento','contacto','email','propietario'].forEach(f => {
+    if (ref[f]) document.getElementById('field-'+f).value = ref[f];
+  });
+  presetClient = currentClientKey;
+  document.getElementById('modal-form').classList.add('open');
+};
+
+window.closeModal = () => {
+  document.getElementById('modal-form').classList.remove('open');
+  editingId = null;
+  if (presetClient) {
+    const key = presetClient; presetClient = null;
+    setTimeout(() => openClientModal(key), 150);
+  }
+};
 
 window.saveRecord = async () => {
   const g = f => document.getElementById('field-'+f).value.trim();
@@ -460,45 +587,111 @@ window.deleteRecord = async id => {
   catch(e) { showToast('Error: ' + e.message, 'error'); }
 };
 
-// ── DETAIL ──
-window.openDetail = id => {
-  const rec = allRecords.find(r => r.id === id);
-  if (!rec) return;
-  document.getElementById('detail-title').textContent = `${rec.ramo} — ${rec.poliza}`;
-  const fmt = v => v || '<span style="color:var(--text3)">—</span>';
-  const fmtD = v => v ? new Date(v+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'}) : '<span style="color:var(--text3)">—</span>';
-  document.getElementById('detail-body').innerHTML = `<div class="detail-grid">
-    <div class="detail-item"><label>Ramo</label><div class="val">${fmt(rec.ramo)}</div></div>
-    <div class="detail-item"><label>No. Póliza</label><div class="val" style="font-family:monospace">${fmt(rec.poliza)}</div></div>
-    <div class="detail-item"><label>Cliente</label><div class="val">${fmt(rec.cliente)}</div></div>
-    <div class="detail-item"><label>RFC</label><div class="val" style="font-family:monospace">${fmt(rec.rfc)}</div></div>
-    <div class="detail-item"><label>Fecha de nacimiento</label><div class="val">${fmtD(rec.nacimiento)}</div></div>
-    <div class="detail-item"><label>Aniversario / Renovación</label><div class="val">${fmtD(rec.aniversario)}</div></div>
-    <div class="detail-item"><label>Contacto</label><div class="val">${rec.contacto?`<a href="tel:${rec.contacto}" style="color:var(--accent-text)">${rec.contacto}</a>`:fmt('')}</div></div>
-    <div class="detail-item"><label>Correo electrónico</label><div class="val">${rec.email?`<a href="mailto:${rec.email}" style="color:var(--accent-text)">${rec.email}</a>`:fmt('')}</div></div>
-    <div class="detail-item"><label>Forma de pago</label><div class="val">${fmt(rec.pago)}</div></div>
-    <div class="detail-item"><label>Propietario</label><div class="val">${fmt(rec.propietario)}</div></div>
-    <div class="detail-item full"><label>Agente registrado</label><div class="val">${fmt(rec.agente)}</div></div>
-    ${rec.notas?`<div class="detail-item full"><label>Notas</label><div class="val" style="white-space:pre-wrap;line-height:1.6">${rec.notas}</div></div>`:''}
-  </div>`;
-  document.getElementById('detail-edit-btn').onclick = () => { closeDetail(); openModal(id); };
-  document.getElementById('modal-detail').classList.add('open');
-};
+// ── AGRUPACIÓN POR CLIENTE ──
+function clientKey(r) {
+  return `${(r.cliente||'').trim().toLowerCase()}|${(r.rfc||'').trim().toUpperCase()}`;
+}
 
-window.closeDetail = () => document.getElementById('modal-detail').classList.remove('open');
-
-// ── TABLE + CARDS ──
-function filtered() {
-  const q = (document.getElementById('search-input')?.value||'').toLowerCase();
-  const ramo = document.getElementById('filter-ramo')?.value||'';
-  return allRecords.filter(r => {
-    const m = !q || [r.cliente,r.poliza,r.rfc,r.ramo,r.agente,r.email].join(' ').toLowerCase().includes(q);
-    return m && (!ramo || r.ramo === ramo);
+function groupByClient() {
+  const map = new Map();
+  allRecords.forEach(r => {
+    const key = clientKey(r);
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(r);
+  });
+  return [...map.entries()].map(([key, records]) => {
+    // Orden por createdAt desc ya viene de allRecords
+    const ramos = [...new Set(records.map(r => r.ramo).filter(Boolean))];
+    const agentes = [...new Set(records.map(r => r.agente).filter(Boolean))];
+    const today = new Date();
+    const upcoming = records
+      .map(r => r.aniversario)
+      .filter(Boolean)
+      .map(d => new Date(d+'T00:00:00'))
+      .sort((a,b) => Math.abs(a-today) - Math.abs(b-today));
+    return {
+      key,
+      cliente: records[0].cliente || 'Sin nombre',
+      rfc: records[0].rfc || '',
+      records,
+      ramos,
+      agentes,
+      proximoAniversario: upcoming[0] || null,
+      total: records.length
+    };
   });
 }
 
+function filteredClients() {
+  const q = (document.getElementById('search-input')?.value||'').toLowerCase();
+  const ramo = document.getElementById('filter-ramo')?.value||'';
+  return groupByClient().filter(g => {
+    const matchQ = !q || [g.cliente, g.rfc, g.agentes.join(' '), g.records.map(r=>r.poliza).join(' '), g.records.map(r=>r.email).join(' ')].join(' ').toLowerCase().includes(q);
+    const matchRamo = !ramo || g.ramos.includes(ramo);
+    return matchQ && matchRamo;
+  }).sort((a,b) => {
+    const aAlert = clientHasAlert(a), bAlert = clientHasAlert(b);
+    const aScore = aAlert.hasOverdueRenewal ? 3 : aAlert.hasRenewal ? 2 : aAlert.hasBirthday ? 1 : 0;
+    const bScore = bAlert.hasOverdueRenewal ? 3 : bAlert.hasRenewal ? 2 : bAlert.hasBirthday ? 1 : 0;
+    if (aScore !== bScore) return bScore - aScore;
+    return a.cliente.localeCompare(b.cliente, 'es');
+  });
+}
+
+// ── MODAL CLIENTE ──
+window.openClientModal = (key) => {
+  const group = groupByClient().find(g => g.key === key);
+  if (!group) return;
+  currentClientKey = key;
+  document.getElementById('client-modal-title').textContent = group.cliente;
+
+  const fmtD = v => v ? new Date(v+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
+
+  const birthdayChip = group.records.length ? birthdayAlertChip(group.records[0].nacimiento) : '';
+
+  document.getElementById('client-summary-bar').innerHTML = `
+    <div class="client-summary-item"><strong>${group.total}</strong>Pólizas</div>
+    <div class="client-summary-item"><strong>${group.ramos.length}</strong>Ramos</div>
+    <div class="client-summary-item"><strong>${group.proximoAniversario ? fmtD(group.proximoAniversario.toISOString().split('T')[0]) : '—'}</strong>Próx. aniversario</div>
+    <div class="client-summary-item"><strong style="font-size:13px">${group.rfc || '—'}</strong>RFC</div>
+    ${birthdayChip ? `<div class="client-summary-item"><strong style="font-size:13px">${birthdayChip}</strong>Cumpleaños</div>` : ''}
+  `;
+
+  document.getElementById('client-poliza-list').innerHTML = group.records.map(r => {
+    const badge = RAMO_BADGES[r.ramo]||'badge-blue';
+    const renewalInfo = daysUntilNextAnniversary(r.aniversario);
+    const itemClass = renewalInfo && renewalInfo.status === 'overdue' ? 'has-renewal-alert overdue'
+                     : renewalInfo && renewalInfo.status !== 'none' ? 'has-renewal-alert' : '';
+    const rChip = renewalAlertChip(r.aniversario);
+    return `<div class="client-poliza-item ${itemClass}">
+      <div class="client-poliza-top">
+        <span class="badge ${badge}">${r.ramo||'—'}</span>
+        <span class="client-poliza-num">${r.poliza||'—'}</span>
+      </div>
+      <div class="client-poliza-meta">
+        <span>💳 <strong>${r.pago||'—'}</strong></span>
+        <span class="poliza-aniv-cell">📅 Aniversario: <strong>${fmtD(r.aniversario)}</strong> ${rChip}</span>
+        <span>👤 <strong>${r.agente||'—'}</strong></span>
+      </div>
+      ${r.notas?`<div style="font-size:12px;color:var(--text2);margin-bottom:8px">${r.notas}</div>`:''}
+      <div class="client-poliza-actions">
+        <button class="btn btn-outline btn-sm" onclick="openModal('${r.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteRecord('${r.id}')">Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('modal-client').classList.add('open');
+};
+
+window.closeClientModal = () => {
+  document.getElementById('modal-client').classList.remove('open');
+  currentClientKey = null;
+};
+
+// ── TABLE + CARDS (por cliente) ──
 window.renderTable = () => {
-  const data = filtered();
+  const data = filteredClients();
   const total = data.length;
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
   currentPage = Math.min(currentPage, totalPages);
@@ -508,60 +701,78 @@ window.renderTable = () => {
   const cards = document.getElementById('mobile-cards');
   const empty = document.getElementById('empty-state');
 
+  const fmtD = v => v ? v.toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
+
   if (!page.length) {
     tbody.innerHTML = ''; cards.innerHTML = '';
     empty.style.display = 'block';
   } else {
     empty.style.display = 'none';
 
-    // Tabla desktop
-    tbody.innerHTML = page.map(r => {
-      const badge = RAMO_BADGES[r.ramo]||'badge-blue';
-      const aniv = r.aniversario ? new Date(r.aniversario+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'2-digit',year:'numeric'}) : '—';
-      return `<tr>
-        <td><span class="badge ${badge}">${r.ramo||'—'}</span></td>
-        <td style="font-family:monospace;font-size:12px">${r.poliza||'—'}</td>
-        <td style="font-weight:500">${r.cliente||'—'}</td>
-        <td style="font-family:monospace;font-size:12px;color:var(--text2)">${r.rfc||'—'}</td>
-        <td>${aniv}</td><td>${r.pago||'—'}</td>
-        <td style="color:var(--text2)">${r.agente||'—'}</td>
-        <td><div class="actions-cell">
-          <button class="btn btn-outline btn-sm" onclick="openDetail('${r.id}')">Ver</button>
-          <button class="btn btn-outline btn-sm" onclick="openModal('${r.id}')">Editar</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteRecord('${r.id}')">Eliminar</button>
+    // Tabla desktop — una fila por cliente
+    tbody.innerHTML = page.map(g => {
+      const chips = g.ramos.map(r => `<span class="badge ${RAMO_BADGES[r]||'badge-blue'}">${r}</span>`).join('');
+      const alerts = clientHasAlert(g);
+      const flagClass = alerts.hasOverdueRenewal ? 'renewal overdue' : alerts.hasRenewal ? 'renewal' : alerts.hasBirthday ? 'birthday' : '';
+      const bChip = alerts.hasBirthday ? birthdayAlertChip(g.records.find(r => daysUntilNextAnniversary(r.nacimiento) && daysUntilNextAnniversary(r.nacimiento).status !== 'none')?.nacimiento) : '';
+      const rRecord = g.records.find(r => { const i = daysUntilNextAnniversary(r.aniversario); return i && i.status !== 'none'; });
+      const rChip = rRecord ? renewalAlertChip(rRecord.aniversario) : '';
+      return `<tr style="cursor:pointer" onclick="openClientModal('${g.key.replace(/'/g,"\\'")}')">
+        <td style="padding:0">
+          <div style="display:flex;align-items:stretch;height:100%">
+            <div class="row-alert-flag ${flagClass}"></div>
+            <div style="padding:11px 14px;font-weight:500">${g.cliente}</div>
+          </div>
+        </td>
+        <td style="font-family:monospace;font-size:12px;color:var(--text2)">${g.rfc||'—'}</td>
+        <td><div class="ramo-chips">${chips}</div></td>
+        <td><span class="poliza-count">${g.total}</span></td>
+        <td>
+          <div class="alert-stack">
+            <span>${fmtD(g.proximoAniversario)}</span>
+            ${rChip}${bChip}
+          </div>
+        </td>
+        <td style="color:var(--text2)">${g.agentes.join(', ')||'—'}</td>
+        <td><div class="actions-cell" onclick="event.stopPropagation()">
+          <button class="btn btn-outline btn-sm" onclick="openClientModal('${g.key.replace(/'/g,"\\'")}')">Ver pólizas</button>
         </div></td>
       </tr>`;
     }).join('');
 
-    // Tarjetas móvil
-    cards.innerHTML = page.map(r => {
-      const badge = RAMO_BADGES[r.ramo]||'badge-blue';
-      const aniv = r.aniversario ? new Date(r.aniversario+'T00:00:00').toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'}) : '—';
-      return `<div class="record-card">
-        <div class="card-top">
-          <div>
-            <div class="card-name">${r.cliente||'—'}</div>
-            <div class="card-poliza">${r.poliza||'—'}</div>
+    // Tarjetas móvil — una por cliente
+    cards.innerHTML = page.map(g => {
+      const chips = g.ramos.map(r => `<span class="badge ${RAMO_BADGES[r]||'badge-blue'}">${r}</span>`).join(' ');
+      const alerts = clientHasAlert(g);
+      const flagClass = alerts.hasOverdueRenewal ? 'renewal overdue' : alerts.hasRenewal ? 'renewal' : alerts.hasBirthday ? 'birthday' : '';
+      const bChip = alerts.hasBirthday ? birthdayAlertChip(g.records.find(r => daysUntilNextAnniversary(r.nacimiento) && daysUntilNextAnniversary(r.nacimiento).status !== 'none')?.nacimiento) : '';
+      const rRecord = g.records.find(r => { const i = daysUntilNextAnniversary(r.aniversario); return i && i.status !== 'none'; });
+      const rChip = rRecord ? renewalAlertChip(rRecord.aniversario) : '';
+      return `<div class="record-card" onclick="openClientModal('${g.key.replace(/'/g,"\\'")}')">
+        ${flagClass ? `<div class="row-alert-flag ${flagClass}"></div>` : ''}
+        <div class="record-card-body">
+          <div class="card-top">
+            <div>
+              <div class="card-name">${g.cliente}</div>
+              <div class="card-poliza">${g.rfc||'Sin RFC'}</div>
+            </div>
+            <span class="poliza-count">${g.total} póliza${g.total!==1?'s':''}</span>
           </div>
-          <span class="badge ${badge}">${r.ramo||'—'}</span>
-        </div>
-        <div class="card-meta">
-          ${r.pago?`<span class="card-meta-item">💳 <strong>${r.pago}</strong></span>`:''}
-          ${aniv!=='—'?`<span class="card-meta-item">📅 <strong>${aniv}</strong></span>`:''}
-          ${r.agente?`<span class="card-meta-item">👤 ${r.agente}</span>`:''}
-          ${r.contacto?`<span class="card-meta-item">📞 ${r.contacto}</span>`:''}
-        </div>
-        <div class="card-actions">
-          <button class="btn btn-outline" onclick="openDetail('${r.id}')">Ver</button>
-          <button class="btn btn-outline" onclick="openModal('${r.id}')">Editar</button>
-          <button class="btn btn-danger" onclick="deleteRecord('${r.id}')">Eliminar</button>
+          <div class="card-meta">
+            ${chips}
+          </div>
+          <div class="card-meta" style="margin-top:6px">
+            ${g.proximoAniversario?`<span class="card-meta-item">📅 <strong>${fmtD(g.proximoAniversario)}</strong></span>`:''}
+            ${g.agentes.length?`<span class="card-meta-item">👤 ${g.agentes.join(', ')}</span>`:''}
+          </div>
+          ${(rChip || bChip) ? `<div class="card-meta" style="margin-top:6px">${rChip}${bChip}</div>` : ''}
         </div>
       </div>`;
     }).join('');
   }
 
   // Paginación
-  document.getElementById('pagination-info').textContent = `${total} registro${total!==1?'s':''}`;
+  document.getElementById('pagination-info').textContent = `${total} cliente${total!==1?'s':''}`;
   const btns = document.getElementById('pagination-btns');
   let html = `<button onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
   const range = [];
@@ -575,7 +786,7 @@ window.renderTable = () => {
 };
 
 window.goPage = p => {
-  currentPage = Math.max(1, Math.min(p, Math.max(1,Math.ceil(filtered().length/PER_PAGE))));
+  currentPage = Math.max(1, Math.min(p, Math.max(1,Math.ceil(filteredClients().length/PER_PAGE))));
   renderTable();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
@@ -604,7 +815,7 @@ window.showToast = (msg, type='success') => {
 
 // Cerrar modales al tocar el fondo
 document.getElementById('modal-form').addEventListener('click', e => { if(e.target===document.getElementById('modal-form')) closeModal(); });
-document.getElementById('modal-detail').addEventListener('click', e => { if(e.target===document.getElementById('modal-detail')) closeDetail(); });
+document.getElementById('modal-client').addEventListener('click', e => { if(e.target===document.getElementById('modal-client')) closeClientModal(); });
 </script>
 </body>
 </html>
