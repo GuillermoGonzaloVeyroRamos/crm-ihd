@@ -286,7 +286,7 @@
         <thead>
           <tr>
             <th>Cliente</th><th>RFC</th><th>Ramos</th><th>Pólizas</th>
-            <th>Próximo aniversario</th><th>Agente</th><th>Acciones</th>
+            <th>Próximo cumpleaños</th><th>Próximo vencimiento</th><th>Agente</th><th>Acciones</th>
           </tr>
         </thead>
         <tbody id="table-body"></tbody>
@@ -603,20 +603,31 @@ function groupByClient() {
     // Orden por createdAt desc ya viene de allRecords
     const ramos = [...new Set(records.map(r => r.ramo).filter(Boolean))];
     const agentes = [...new Set(records.map(r => r.agente).filter(Boolean))];
+    // Próximo cumpleaños: usar nacimiento del cliente (mismo para todas sus pólizas)
+    const nacimiento = records.find(r => r.nacimiento)?.nacimiento || null;
+    const proximoCumple = nacimiento ? new Date(nacimiento + 'T00:00:00') : null;
+    // Próximo vencimiento de póliza: el aniversario más cercano a hoy (ignorando año)
     const today = new Date();
-    const upcoming = records
+    const renewalCandidates = records
       .map(r => r.aniversario)
       .filter(Boolean)
-      .map(d => new Date(d+'T00:00:00'))
-      .sort((a,b) => Math.abs(a-today) - Math.abs(b-today));
+      .map(d => {
+        const orig = new Date(d + 'T00:00:00');
+        const info = daysUntilNextAnniversary(d);
+        return { orig, days: info ? info.days : Infinity, status: info ? info.status : 'none' };
+      })
+      .sort((a,b) => a.days - b.days);
+    const proximoVencimiento = renewalCandidates[0] || null;
     return {
       key,
       cliente: records[0].cliente || 'Sin nombre',
       rfc: records[0].rfc || '',
+      nacimiento,
       records,
       ramos,
       agentes,
-      proximoAniversario: upcoming[0] || null,
+      proximoCumple,
+      proximoVencimiento,
       total: records.length
     };
   });
@@ -652,9 +663,9 @@ window.openClientModal = (key) => {
   document.getElementById('client-summary-bar').innerHTML = `
     <div class="client-summary-item"><strong>${group.total}</strong>Pólizas</div>
     <div class="client-summary-item"><strong>${group.ramos.length}</strong>Ramos</div>
-    <div class="client-summary-item"><strong>${group.proximoAniversario ? fmtD(group.proximoAniversario.toISOString().split('T')[0]) : '—'}</strong>Próx. aniversario</div>
+    <div class="client-summary-item"><strong>${group.proximoCumple ? fmtD(group.proximoCumple.toISOString().split('T')[0]) : '—'}</strong>Cumpleaños</div>
     <div class="client-summary-item"><strong style="font-size:13px">${group.rfc || '—'}</strong>RFC</div>
-    ${birthdayChip ? `<div class="client-summary-item"><strong style="font-size:13px">${birthdayChip}</strong>Cumpleaños</div>` : ''}
+    ${birthdayChip ? `<div class="client-summary-item"><strong style="font-size:13px">${birthdayChip}</strong>&nbsp;</div>` : ''}
   `;
 
   document.getElementById('client-poliza-list').innerHTML = group.records.map(r => {
@@ -729,8 +740,14 @@ window.renderTable = () => {
         <td><span class="poliza-count">${g.total}</span></td>
         <td>
           <div class="alert-stack">
-            <span>${fmtD(g.proximoAniversario)}</span>
-            ${rChip}${bChip}
+            <span>${fmtD(g.proximoCumple)}</span>
+            ${bChip}
+          </div>
+        </td>
+        <td>
+          <div class="alert-stack">
+            <span>${g.proximoVencimiento ? fmtD(g.proximoVencimiento.orig) : '—'}</span>
+            ${rChip}
           </div>
         </td>
         <td style="color:var(--text2)">${g.agentes.join(', ')||'—'}</td>
@@ -762,10 +779,16 @@ window.renderTable = () => {
             ${chips}
           </div>
           <div class="card-meta" style="margin-top:6px">
-            ${g.proximoAniversario?`<span class="card-meta-item">📅 <strong>${fmtD(g.proximoAniversario)}</strong></span>`:''}
+            ${g.proximoCumple?`<span class="card-meta-item">🎂 <strong>${fmtD(g.proximoCumple)}</strong></span>`:''}
+            ${bChip}
+          </div>
+          <div class="card-meta" style="margin-top:4px">
+            ${g.proximoVencimiento?`<span class="card-meta-item">📅 <strong>${fmtD(g.proximoVencimiento.orig)}</strong></span>`:''}
+            ${rChip}
+          </div>
+          <div class="card-meta" style="margin-top:4px">
             ${g.agentes.length?`<span class="card-meta-item">👤 ${g.agentes.join(', ')}</span>`:''}
           </div>
-          ${(rChip || bChip) ? `<div class="card-meta" style="margin-top:6px">${rChip}${bChip}</div>` : ''}
         </div>
       </div>`;
     }).join('');
