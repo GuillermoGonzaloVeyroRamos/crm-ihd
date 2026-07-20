@@ -277,6 +277,7 @@
       <select class="filter-select" id="filter-ramo" onchange="renderTable()">
         <option value="">Todos los ramos</option>
       </select>
+      <button class="btn btn-outline" onclick="openNewClientModal()">+ Nuevo cliente</button>
       <button class="btn btn-success" onclick="openModal()">+ Nueva póliza</button>
     </div>
 
@@ -366,6 +367,31 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeClientModal()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVO CLIENTE -->
+<div class="modal-backdrop" id="modal-new-client">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header">
+      <h3>Nuevo cliente</h3>
+      <button class="modal-close" onclick="closeNewClientModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group full"><label>Nombre completo *</label><input type="text" id="nc-cliente" placeholder="Nombre completo" autocomplete="off"></div>
+        <div class="form-group"><label>RFC</label><input type="text" id="nc-rfc" placeholder="XAXX010101000" style="font-family:'DM Mono',monospace;text-transform:uppercase" autocomplete="off"></div>
+        <div class="form-group"><label>Fecha de nacimiento</label><input type="date" id="nc-nacimiento"></div>
+        <div class="form-group"><label>Contacto (teléfono)</label><input type="tel" id="nc-contacto" placeholder="10 dígitos" inputmode="tel"></div>
+        <div class="form-group"><label>Correo electrónico</label><input type="email" id="nc-email" placeholder="correo@ejemplo.com" inputmode="email"></div>
+        <div class="form-group"><label>Propietario del contacto</label><input type="text" id="nc-propietario" placeholder="Nombre" autocomplete="off"></div>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-top:0.5rem">Al guardar, podrás agregar pólizas desde el perfil del cliente.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeNewClientModal()">Cancelar</button>
+      <button class="btn btn-success" id="nc-save-btn" onclick="saveNewClient()">Guardar cliente</button>
     </div>
   </div>
 </div>
@@ -700,6 +726,52 @@ window.closeClientModal = () => {
   currentClientKey = null;
 };
 
+// ── NUEVO CLIENTE ──
+window.openNewClientModal = () => {
+  ['nc-cliente','nc-rfc','nc-nacimiento','nc-contacto','nc-email','nc-propietario']
+    .forEach(f => { document.getElementById(f).value = ''; });
+  document.getElementById('modal-new-client').classList.add('open');
+};
+
+window.closeNewClientModal = () => {
+  document.getElementById('modal-new-client').classList.remove('open');
+};
+
+window.saveNewClient = async () => {
+  const g = id => document.getElementById(id).value.trim();
+  const cliente = g('nc-cliente');
+  if (!cliente) { showToast('El nombre del cliente es obligatorio.', 'error'); return; }
+  const btn = document.getElementById('nc-save-btn');
+  btn.disabled = true; btn.textContent = 'Guardando...';
+  // Guardamos un registro "base" sin póliza para que el cliente aparezca en el listado
+  const rec = {
+    cliente,
+    rfc: g('nc-rfc'),
+    nacimiento: g('nc-nacimiento'),
+    contacto: g('nc-contacto'),
+    email: g('nc-email'),
+    propietario: g('nc-propietario'),
+    ramo: '', poliza: '', aniversario: '', pago: '', agente: '', notas: '',
+    createdAt: new Date().toISOString(),
+    esRegistroBase: true
+  };
+  try {
+    await addDoc(collection(db, 'polizas'), rec);
+    closeNewClientModal();
+    showToast(`Cliente "${cliente}" guardado.`, 'success');
+    // Abrir automáticamente el modal del cliente recién creado
+    setTimeout(() => {
+      const key = `${cliente.trim().toLowerCase()}|${g('nc-rfc').toUpperCase()}`;
+      const group = groupByClient().find(g => g.key === key);
+      if (group) openClientModal(group.key);
+    }, 600);
+  } catch(e) {
+    showToast('Error: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Guardar cliente';
+  }
+};
+
 // ── TABLE + CARDS (por cliente) ──
 window.renderTable = () => {
   const data = filteredClients();
@@ -839,6 +911,7 @@ window.showToast = (msg, type='success') => {
 // Cerrar modales al tocar el fondo
 document.getElementById('modal-form').addEventListener('click', e => { if(e.target===document.getElementById('modal-form')) closeModal(); });
 document.getElementById('modal-client').addEventListener('click', e => { if(e.target===document.getElementById('modal-client')) closeClientModal(); });
+document.getElementById('modal-new-client').addEventListener('click', e => { if(e.target===document.getElementById('modal-new-client')) closeNewClientModal(); });
 </script>
 </body>
 </html>
